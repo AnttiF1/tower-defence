@@ -7,14 +7,21 @@ body {
 }
 
 h1 {
-    margin: 20px;
+    margin: 15px;
 }
 
-#game {
+.game-info {
     width: 800px;
-    height: 500px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 18px;
+}
+
+canvas {
+    display: block;
     margin: auto;
-    background: #4a8f45;
     border: 3px solid white;
+    background: #4a8f45;
 }
 
