@@ -20,62 +20,167 @@ let mouseX = 0;
 let mouseY = 0;
 
 // -------------------------
+// VIHOLLISTYYPIT
+// -------------------------
+
+const enemyTypes = {
+    normal: {
+        color: "red",
+        speed: 1.2,
+        health: 100,
+        reward: 10
+    },
+
+    fast: {
+        color: "yellow",
+        speed: 2.2,
+        health: 60,
+        reward: 15
+    },
+
+    tank: {
+        color: "purple",
+        speed: 0.7,
+        health: 300,
+        reward: 30
+    }
+};
+
+// -------------------------
 // KENTTÄ
 // -------------------------
 
 function drawMap() {
-    ctx.fillStyle = "#4a8f45";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Vihollisten reitti
+    ctx.fillStyle = "#4a8f45";
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    // Reitti
     ctx.fillStyle = "#c2a36b";
-    ctx.fillRect(0, 220, 800, 60);
+
+    ctx.fillRect(
+        0,
+        220,
+        800,
+        60
+    );
 
     // Tukikohta
     ctx.fillStyle = "#444";
-    ctx.fillRect(740, 190, 60, 120);
+
+    ctx.fillRect(
+        740,
+        190,
+        60,
+        120
+    );
 
     ctx.fillStyle = "white";
     ctx.font = "16px Arial";
-    ctx.fillText("TUKIKOHTA", 735, 180);
+
+    ctx.fillText(
+        "TUKIKOHTA",
+        735,
+        180
+    );
 
     // Rakennuspaikan esikatselu
     if (isValidTowerPosition(mouseX, mouseY)) {
-        ctx.strokeStyle = "rgba(0,255,0,0.5)";
+
+        ctx.strokeStyle =
+            "rgba(0,255,0,0.5)";
+
     } else {
-        ctx.strokeStyle = "rgba(255,0,0,0.5)";
+
+        ctx.strokeStyle =
+            "rgba(255,0,0,0.5)";
     }
 
     ctx.beginPath();
-    ctx.arc(mouseX, mouseY, 25, 0, Math.PI * 2);
+
+    ctx.arc(
+        mouseX,
+        mouseY,
+        25,
+        0,
+        Math.PI * 2
+    );
+
     ctx.stroke();
 }
 
 // -------------------------
-// VIHOLLINEN
+// VIHOLLISEN LUONTI
 // -------------------------
 
 function createEnemy() {
-    const health = 100 + wave * 20;
+
+    let type = "normal";
+
+    // Myöhemmillä aalloilla
+    // tulee vaikeampia vihollisia
+
+    const random = Math.random();
+
+    if (wave >= 3 && random < 0.2) {
+
+        type = "fast";
+
+    } else if (wave >= 5 && random < 0.15) {
+
+        type = "tank";
+    }
+
+    const template = enemyTypes[type];
+
+    const health =
+        template.health +
+        wave * 10;
 
     enemies.push({
+
         x: -20,
+
         y: 250,
-        speed: 1 + wave * 0.15,
-        size: 20,
+
+        type: type,
+
+        speed:
+            template.speed +
+            wave * 0.05,
+
+        size: type === "tank" ? 25 : 20,
+
         health: health,
-        maxHealth: health
+
+        maxHealth: health,
+
+        reward: template.reward
     });
 
     enemiesSpawned++;
 }
 
+// -------------------------
+// VIHOLLISTEN PIIRTO
+// -------------------------
+
 function drawEnemies() {
+
     enemies.forEach(enemy => {
 
-        ctx.fillStyle = "red";
+        const type =
+            enemyTypes[enemy.type];
+
+        ctx.fillStyle = type.color;
 
         ctx.beginPath();
+
         ctx.arc(
             enemy.x,
             enemy.y,
@@ -83,44 +188,66 @@ function drawEnemies() {
             0,
             Math.PI * 2
         );
+
         ctx.fill();
 
-        // HP-palkki
+        // HP-palkin tausta
+
         ctx.fillStyle = "black";
+
         ctx.fillRect(
-            enemy.x - 20,
-            enemy.y - 30,
-            40,
-            5
+            enemy.x - 25,
+            enemy.y - 35,
+            50,
+            6
         );
 
+        // HP
+
         ctx.fillStyle = "lime";
+
         ctx.fillRect(
-            enemy.x - 20,
-            enemy.y - 30,
-            40 * (enemy.health / enemy.maxHealth),
-            5
+            enemy.x - 25,
+            enemy.y - 35,
+            50 *
+            (enemy.health /
+            enemy.maxHealth),
+            6
         );
     });
 }
 
+// -------------------------
+// VIHOLLISTEN LIIKE
+// -------------------------
+
 function updateEnemies() {
 
-    enemies.forEach((enemy, index) => {
+    enemies.forEach(
+        (enemy, index) => {
 
         enemy.x += enemy.speed;
+
+        // Saavuttaa tukikohdan
 
         if (enemy.x > canvas.width) {
 
             lives--;
 
-            document.getElementById("lives").textContent = lives;
+            document.getElementById(
+                "lives"
+            ).textContent = lives;
 
-            enemies.splice(index, 1);
+            enemies.splice(
+                index,
+                1
+            );
 
             if (lives <= 0) {
 
-                alert("Peli loppui!");
+                alert(
+                    "Peli loppui!"
+                );
 
                 lives = 10;
                 money = 100;
@@ -133,9 +260,17 @@ function updateEnemies() {
                 enemiesSpawned = 0;
                 enemiesToSpawn = 5;
 
-                document.getElementById("lives").textContent = lives;
-                document.getElementById("money").textContent = money;
-                document.getElementById("wave").textContent = wave;
+                document.getElementById(
+                    "lives"
+                ).textContent = lives;
+
+                document.getElementById(
+                    "money"
+                ).textContent = money;
+
+                document.getElementById(
+                    "wave"
+                ).textContent = wave;
             }
         }
     });
@@ -147,7 +282,10 @@ function updateEnemies() {
 
 function updateWave() {
 
-    if (enemiesSpawned < enemiesToSpawn) {
+    if (
+        enemiesSpawned <
+        enemiesToSpawn
+    ) {
 
         spawnTimer--;
 
@@ -158,52 +296,79 @@ function updateWave() {
             spawnTimer = 80;
         }
 
-    } else if (enemies.length === 0) {
+    } else if (
+        enemies.length === 0
+    ) {
 
         wave++;
 
         enemiesSpawned = 0;
 
-        enemiesToSpawn = 5 + wave * 2;
+        enemiesToSpawn =
+            5 + wave * 2;
 
         spawnTimer = 100;
 
-        document.getElementById("wave").textContent = wave;
+        document.getElementById(
+            "wave"
+        ).textContent = wave;
     }
 }
 
 // -------------------------
-// TORNIEN SIJOITTAMINEN
+// TORNIN SIJOITTAMINEN
 // -------------------------
 
-function isValidTowerPosition(x, y) {
+function isValidTowerPosition(
+    x,
+    y
+) {
 
-    // Ei saa rakentaa vihollisten reitille
-    if (y > 220 && y < 280) {
+    // Reitti
+
+    if (
+        y > 220 &&
+        y < 280
+    ) {
+
         return false;
     }
 
-    // Ei saa rakentaa tukikohdan päälle
+    // Tukikohta
+
     if (
         x > 710 &&
         x < 800 &&
         y > 160 &&
         y < 330
     ) {
+
         return false;
     }
 
-    // Ei saa rakentaa liian lähelle toista tornia
-    for (const tower of towers) {
+    // Liian lähellä toista tornia
 
-        const dx = tower.x - x;
-        const dy = tower.y - y;
+    for (
+        const tower of towers
+    ) {
 
-        const distance = Math.sqrt(
-            dx * dx + dy * dy
-        );
+        const dx =
+            tower.x - x;
 
-        if (distance < towerSpacing) {
+        const dy =
+            tower.y - y;
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+        if (
+            distance <
+            towerSpacing
+        ) {
+
             return false;
         }
     }
@@ -211,86 +376,139 @@ function isValidTowerPosition(x, y) {
     return true;
 }
 
-canvas.addEventListener("mousemove", event => {
+canvas.addEventListener(
+    "mousemove",
+    event => {
 
-    const rect = canvas.getBoundingClientRect();
+    const rect =
+        canvas.getBoundingClientRect();
 
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
+    mouseX =
+        event.clientX -
+        rect.left;
+
+    mouseY =
+        event.clientY -
+        rect.top;
 });
 
-canvas.addEventListener("click", event => {
+canvas.addEventListener(
+    "click",
+    event => {
 
-    const rect = canvas.getBoundingClientRect();
+    const rect =
+        canvas.getBoundingClientRect();
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x =
+        event.clientX -
+        rect.left;
 
-    // Jos klikataan olemassa olevaa tornia,
-    // päivitetään se
-    const clickedTower = towers.find(tower => {
+    const y =
+        event.clientY -
+        rect.top;
 
-        const dx = tower.x - x;
-        const dy = tower.y - y;
+    // Tarkista klikattu torni
 
-        const distance = Math.sqrt(
-            dx * dx + dy * dy
-        );
+    const clickedTower =
+        towers.find(tower => {
+
+        const dx =
+            tower.x - x;
+
+        const dy =
+            tower.y - y;
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
 
         return distance < 20;
     });
 
     if (clickedTower) {
 
-        upgradeTower(clickedTower);
+        upgradeTower(
+            clickedTower
+        );
 
         return;
     }
 
-    // Tarkistetaan rakennuspaikka
-    if (!isValidTowerPosition(x, y)) {
+    // Tarkista rakennuspaikka
+
+    if (
+        !isValidTowerPosition(
+            x,
+            y
+        )
+    ) {
+
         return;
     }
 
-    // Tarkistetaan raha
-    if (money < towerCost) {
+    if (
+        money <
+        towerCost
+    ) {
+
         return;
     }
 
     towers.push({
+
         x: x,
+
         y: y,
+
         range: 150,
+
         damage: 25,
+
         cooldown: 0,
+
         level: 1
     });
 
     money -= towerCost;
 
-    document.getElementById("money").textContent = money;
+    document.getElementById(
+        "money"
+    ).textContent = money;
 });
 
 // -------------------------
 // TORNIN PÄIVITYS
 // -------------------------
 
-function upgradeTower(tower) {
+function upgradeTower(
+    tower
+) {
 
-    const upgradeCost = tower.level * 25;
+    const upgradeCost =
+        tower.level * 25;
 
-    if (money < upgradeCost) {
+    if (
+        money <
+        upgradeCost
+    ) {
+
         return;
     }
 
-    money -= upgradeCost;
+    money -=
+        upgradeCost;
 
     tower.level++;
 
     tower.damage += 15;
+
     tower.range += 10;
 
-    document.getElementById("money").textContent = money;
+    document.getElementById(
+        "money"
+    ).textContent = money;
 }
 
 // -------------------------
@@ -299,10 +517,11 @@ function upgradeTower(tower) {
 
 function drawTowers() {
 
-    towers.forEach(tower => {
+    towers.forEach(
+        tower => {
 
-        // Torni
-        ctx.fillStyle = "#555";
+        ctx.fillStyle =
+            "#555";
 
         ctx.fillRect(
             tower.x - 15,
@@ -311,8 +530,8 @@ function drawTowers() {
             30
         );
 
-        // Tornin keskiosa
-        ctx.fillStyle = "#222";
+        ctx.fillStyle =
+            "#222";
 
         ctx.beginPath();
 
@@ -327,8 +546,12 @@ function drawTowers() {
         ctx.fill();
 
         // Level
-        ctx.fillStyle = "white";
-        ctx.font = "12px Arial";
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.font =
+            "12px Arial";
 
         ctx.fillText(
             tower.level,
@@ -344,46 +567,73 @@ function drawTowers() {
 
 function updateTowers() {
 
-    towers.forEach(tower => {
+    towers.forEach(
+        tower => {
 
-        if (tower.cooldown > 0) {
+        if (
+            tower.cooldown > 0
+        ) {
+
             tower.cooldown--;
+
             return;
         }
 
         let target = null;
-        let closestDistance = Infinity;
 
-        enemies.forEach(enemy => {
+        let closestDistance =
+            Infinity;
 
-            const dx = enemy.x - tower.x;
-            const dy = enemy.y - tower.y;
+        enemies.forEach(
+            enemy => {
 
-            const distance = Math.sqrt(
-                dx * dx +
-                dy * dy
-            );
+            const dx =
+                enemy.x -
+                tower.x;
+
+            const dy =
+                enemy.y -
+                tower.y;
+
+            const distance =
+                Math.sqrt(
+                    dx * dx +
+                    dy * dy
+                );
 
             if (
-                distance <= tower.range &&
-                distance < closestDistance
+                distance <=
+                tower.range &&
+                distance <
+                closestDistance
             ) {
-                target = enemy;
-                closestDistance = distance;
+
+                target =
+                    enemy;
+
+                closestDistance =
+                    distance;
             }
         });
 
         if (target) {
 
             bullets.push({
+
                 x: tower.x,
+
                 y: tower.y,
+
                 target: target,
+
                 speed: 5,
-                damage: tower.damage
+
+                damage:
+                    tower.damage
             });
 
-            tower.cooldown = 40;
+            tower.cooldown =
+                40;
         }
     });
 }
@@ -394,35 +644,62 @@ function updateTowers() {
 
 function updateBullets() {
 
-    bullets.forEach((bullet, bulletIndex) => {
+    bullets.forEach(
+        (bullet, bulletIndex) => {
 
-        if (!enemies.includes(bullet.target)) {
+        if (
+            !enemies.includes(
+                bullet.target
+            )
+        ) {
 
-            bullets.splice(bulletIndex, 1);
+            bullets.splice(
+                bulletIndex,
+                1
+            );
 
             return;
         }
 
-        const dx = bullet.target.x - bullet.x;
-        const dy = bullet.target.y - bullet.y;
+        const dx =
+            bullet.target.x -
+            bullet.x;
 
-        const distance = Math.sqrt(
-            dx * dx +
-            dy * dy
-        );
+        const dy =
+            bullet.target.y -
+            bullet.y;
 
-        if (distance < 5) {
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
 
-            bullet.target.health -= bullet.damage;
+        if (
+            distance < 5
+        ) {
 
-            bullets.splice(bulletIndex, 1);
+            bullet.target.health -=
+                bullet.damage;
 
-            if (bullet.target.health <= 0) {
+            bullets.splice(
+                bulletIndex,
+                1
+            );
+
+            if (
+                bullet.target.health <=
+                0
+            ) {
 
                 const enemyIndex =
-                    enemies.indexOf(bullet.target);
+                    enemies.indexOf(
+                        bullet.target
+                    );
 
-                if (enemyIndex !== -1) {
+                if (
+                    enemyIndex !== -1
+                ) {
 
                     enemies.splice(
                         enemyIndex,
@@ -430,9 +707,13 @@ function updateBullets() {
                     );
                 }
 
-                money += 10;
+                money +=
+                    bullet.target.reward;
 
-                document.getElementById("money").textContent = money;
+                document.getElementById(
+                    "money"
+                ).textContent =
+                    money;
             }
 
         } else {
@@ -450,9 +731,11 @@ function updateBullets() {
 
 function drawBullets() {
 
-    ctx.fillStyle = "yellow";
+    ctx.fillStyle =
+        "yellow";
 
-    bullets.forEach(bullet => {
+    bullets.forEach(
+        bullet => {
 
         ctx.beginPath();
 
@@ -477,15 +760,23 @@ function gameLoop() {
     drawMap();
 
     updateWave();
+
     updateEnemies();
+
     updateTowers();
+
     updateBullets();
 
     drawTowers();
+
     drawEnemies();
+
     drawBullets();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 }
 
 gameLoop();
+
