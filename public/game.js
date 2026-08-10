@@ -6,6 +6,7 @@ let money = 100;
 let wave = 1;
 
 const towerCost = 25;
+const towerSpacing = 50;
 
 let enemies = [];
 let bullets = [];
@@ -14,6 +15,9 @@ let towers = [];
 let enemiesToSpawn = 5;
 let enemiesSpawned = 0;
 let spawnTimer = 0;
+
+let mouseX = 0;
+let mouseY = 0;
 
 // -------------------------
 // KENTTÄ
@@ -34,6 +38,17 @@ function drawMap() {
     ctx.fillStyle = "white";
     ctx.font = "16px Arial";
     ctx.fillText("TUKIKOHTA", 735, 180);
+
+    // Rakennuspaikan esikatselu
+    if (isValidTowerPosition(mouseX, mouseY)) {
+        ctx.strokeStyle = "rgba(0,255,0,0.5)";
+    } else {
+        ctx.strokeStyle = "rgba(255,0,0,0.5)";
+    }
+
+    ctx.beginPath();
+    ctx.arc(mouseX, mouseY, 25, 0, Math.PI * 2);
+    ctx.stroke();
 }
 
 // -------------------------
@@ -41,13 +56,15 @@ function drawMap() {
 // -------------------------
 
 function createEnemy() {
+    const health = 100 + wave * 20;
+
     enemies.push({
         x: -20,
         y: 250,
         speed: 1 + wave * 0.15,
         size: 20,
-        health: 100 + wave * 20,
-        maxHealth: 100 + wave * 20
+        health: health,
+        maxHealth: health
     });
 
     enemiesSpawned++;
@@ -93,7 +110,6 @@ function updateEnemies() {
 
         enemy.x += enemy.speed;
 
-        // Saavuttaa tukikohdan
         if (enemy.x > canvas.width) {
 
             lives--;
@@ -103,6 +119,7 @@ function updateEnemies() {
             enemies.splice(index, 1);
 
             if (lives <= 0) {
+
                 alert("Peli loppui!");
 
                 lives = 10;
@@ -110,6 +127,11 @@ function updateEnemies() {
                 wave = 1;
 
                 enemies = [];
+                towers = [];
+                bullets = [];
+
+                enemiesSpawned = 0;
+                enemiesToSpawn = 5;
 
                 document.getElementById("lives").textContent = lives;
                 document.getElementById("money").textContent = money;
@@ -125,7 +147,6 @@ function updateEnemies() {
 
 function updateWave() {
 
-    // Lisää uusia vihollisia
     if (enemiesSpawned < enemiesToSpawn) {
 
         spawnTimer--;
@@ -136,11 +157,8 @@ function updateWave() {
 
             spawnTimer = 80;
         }
-    }
 
-    // Kun kaikki viholliset on tapettu
-    // tai päässeet tukikohtaan
-    else if (enemies.length === 0) {
+    } else if (enemies.length === 0) {
 
         wave++;
 
@@ -155,8 +173,51 @@ function updateWave() {
 }
 
 // -------------------------
-// TORNIT
+// TORNIEN SIJOITTAMINEN
 // -------------------------
+
+function isValidTowerPosition(x, y) {
+
+    // Ei saa rakentaa vihollisten reitille
+    if (y > 220 && y < 280) {
+        return false;
+    }
+
+    // Ei saa rakentaa tukikohdan päälle
+    if (
+        x > 710 &&
+        x < 800 &&
+        y > 160 &&
+        y < 330
+    ) {
+        return false;
+    }
+
+    // Ei saa rakentaa liian lähelle toista tornia
+    for (const tower of towers) {
+
+        const dx = tower.x - x;
+        const dy = tower.y - y;
+
+        const distance = Math.sqrt(
+            dx * dx + dy * dy
+        );
+
+        if (distance < towerSpacing) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+canvas.addEventListener("mousemove", event => {
+
+    const rect = canvas.getBoundingClientRect();
+
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+});
 
 canvas.addEventListener("click", event => {
 
@@ -165,12 +226,33 @@ canvas.addEventListener("click", event => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    // Ei voi rakentaa reitille
-    if (y > 220 && y < 280) {
+    // Jos klikataan olemassa olevaa tornia,
+    // päivitetään se
+    const clickedTower = towers.find(tower => {
+
+        const dx = tower.x - x;
+        const dy = tower.y - y;
+
+        const distance = Math.sqrt(
+            dx * dx + dy * dy
+        );
+
+        return distance < 20;
+    });
+
+    if (clickedTower) {
+
+        upgradeTower(clickedTower);
+
         return;
     }
 
-    // Ei tarpeeksi rahaa
+    // Tarkistetaan rakennuspaikka
+    if (!isValidTowerPosition(x, y)) {
+        return;
+    }
+
+    // Tarkistetaan raha
     if (money < towerCost) {
         return;
     }
@@ -179,7 +261,9 @@ canvas.addEventListener("click", event => {
         x: x,
         y: y,
         range: 150,
-        cooldown: 0
+        damage: 25,
+        cooldown: 0,
+        level: 1
     });
 
     money -= towerCost;
@@ -187,10 +271,37 @@ canvas.addEventListener("click", event => {
     document.getElementById("money").textContent = money;
 });
 
+// -------------------------
+// TORNIN PÄIVITYS
+// -------------------------
+
+function upgradeTower(tower) {
+
+    const upgradeCost = tower.level * 25;
+
+    if (money < upgradeCost) {
+        return;
+    }
+
+    money -= upgradeCost;
+
+    tower.level++;
+
+    tower.damage += 15;
+    tower.range += 10;
+
+    document.getElementById("money").textContent = money;
+}
+
+// -------------------------
+// TORNIT
+// -------------------------
+
 function drawTowers() {
 
     towers.forEach(tower => {
 
+        // Torni
         ctx.fillStyle = "#555";
 
         ctx.fillRect(
@@ -200,6 +311,7 @@ function drawTowers() {
             30
         );
 
+        // Tornin keskiosa
         ctx.fillStyle = "#222";
 
         ctx.beginPath();
@@ -213,11 +325,21 @@ function drawTowers() {
         );
 
         ctx.fill();
+
+        // Level
+        ctx.fillStyle = "white";
+        ctx.font = "12px Arial";
+
+        ctx.fillText(
+            tower.level,
+            tower.x - 4,
+            tower.y + 4
+        );
     });
 }
 
 // -------------------------
-// AMPUMINEN
+// TORNIT AMPUVAT
 // -------------------------
 
 function updateTowers() {
@@ -238,7 +360,8 @@ function updateTowers() {
             const dy = enemy.y - tower.y;
 
             const distance = Math.sqrt(
-                dx * dx + dy * dy
+                dx * dx +
+                dy * dy
             );
 
             if (
@@ -257,7 +380,7 @@ function updateTowers() {
                 y: tower.y,
                 target: target,
                 speed: 5,
-                damage: 25
+                damage: tower.damage
             });
 
             tower.cooldown = 40;
@@ -273,10 +396,10 @@ function updateBullets() {
 
     bullets.forEach((bullet, bulletIndex) => {
 
-        // Jos kohde on kuollut
         if (!enemies.includes(bullet.target)) {
 
             bullets.splice(bulletIndex, 1);
+
             return;
         }
 
@@ -284,7 +407,8 @@ function updateBullets() {
         const dy = bullet.target.y - bullet.y;
 
         const distance = Math.sqrt(
-            dx * dx + dy * dy
+            dx * dx +
+            dy * dy
         );
 
         if (distance < 5) {
@@ -299,7 +423,11 @@ function updateBullets() {
                     enemies.indexOf(bullet.target);
 
                 if (enemyIndex !== -1) {
-                    enemies.splice(enemyIndex, 1);
+
+                    enemies.splice(
+                        enemyIndex,
+                        1
+                    );
                 }
 
                 money += 10;
@@ -310,10 +438,12 @@ function updateBullets() {
         } else {
 
             bullet.x +=
-                (dx / distance) * bullet.speed;
+                (dx / distance) *
+                bullet.speed;
 
             bullet.y +=
-                (dy / distance) * bullet.speed;
+                (dy / distance) *
+                bullet.speed;
         }
     });
 }
