@@ -9,15 +9,53 @@
 
 <body>
 
-    <h1>Tower Defense</h1>
+    <h1>🏰 Tower Defense</h1>
 
     <div class="game-info">
-        <span>Elämät: <strong id="lives">10</strong></span>
-        <span>Raha: <strong id="money">100</strong></span>
-        <span>Aalto: <strong id="wave">1</strong></span>
+        <span>❤️ Elämät: <strong id="lives">10</strong></span>
+        <span>💰 Raha: <strong id="money">100</strong></span>
+        <span>🌊 Aalto: <strong id="wave">1</strong></span>
+        <span>🏆 Pisteet: <strong id="score">0</strong></span>
     </div>
 
-    <canvas id="gameCanvas" width="800" height="500"></canvas>
+    <div id="game-container">
+
+        <canvas
+            id="gameCanvas"
+            width="800"
+            height="500">
+        </canvas>
+
+        <!-- Aloitusruutu -->
+        <div id="startScreen" class="game-screen">
+            <h2>Tower Defense</h2>
+            <p>Puolusta tukikohtaasi vihollisaalloilta!</p>
+
+            <button id="startButton">
+                Aloita peli
+            </button>
+        </div>
+
+        <!-- Game Over -->
+        <div id="gameOverScreen" class="game-screen hidden">
+            <h2>💀 Peli loppui!</h2>
+
+            <p>
+                Pisteet:
+                <strong id="finalScore">0</strong>
+            </p>
+
+            <p>
+                Saavutettu aalto:
+                <strong id="finalWave">1</strong>
+            </p>
+
+            <button id="restartButton">
+                Pelaa uudelleen
+            </button>
+        </div>
+
+    </div>
 
     <script src="game.js"></script>
 
