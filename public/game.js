@@ -1,9 +1,9 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// -------------------------
+// ========================================
 // PELIN TILASTOT
-// -------------------------
+// ========================================
 
 let lives = 10;
 let money = 100;
@@ -11,15 +11,16 @@ let wave = 1;
 let score = 0;
 
 let gameRunning = false;
+let scoreSaved = false;
 
 const towerCost = 25;
-const towerSpacing = 50;
+const towerSpacing = 55;
 
 let enemies = [];
 let bullets = [];
 let towers = [];
 
-let enemiesToSpawn = 5;
+let enemiesToSpawn = 8;
 let enemiesSpawned = 0;
 let spawnTimer = 0;
 
@@ -27,9 +28,9 @@ let mouseX = 0;
 let mouseY = 0;
 
 
-// -------------------------
+// ========================================
 // HTML-ELEMENTIT
-// -------------------------
+// ========================================
 
 const startScreen =
     document.getElementById("startScreen");
@@ -50,43 +51,92 @@ const finalWave =
     document.getElementById("finalWave");
 
 
-// -------------------------
+// ========================================
+// TOP 10 -LISTA
+// Luodaan HTML:n kautta automaattisesti
+// ========================================
+
+let leaderboard =
+    document.createElement("div");
+
+leaderboard.id = "leaderboard";
+
+leaderboard.style.width = "800px";
+leaderboard.style.margin = "20px auto";
+leaderboard.style.padding = "15px";
+leaderboard.style.background = "#333";
+leaderboard.style.borderRadius = "10px";
+leaderboard.style.color = "white";
+
+document.body.appendChild(
+    leaderboard
+);
+
+
+// ========================================
 // VIHOLLISTYYPIT
-// -------------------------
+// ========================================
 
 const enemyTypes = {
 
     normal: {
         color: "red",
-        speed: 1.2,
+        speed: 1.25,
         health: 100,
         reward: 10
     },
 
     fast: {
         color: "yellow",
-        speed: 2.2,
-        health: 60,
+        speed: 2.1,
+        health: 65,
         reward: 15
     },
 
     tank: {
         color: "purple",
-        speed: 0.7,
-        health: 300,
+        speed: 0.75,
+        health: 450,
         reward: 30
     }
 };
 
 
-// -------------------------
+// ========================================
+// VIHOLLISEN REITTI
+// ========================================
+
+const path = [
+
+    { x: -30, y: 250 },
+
+    { x: 130, y: 250 },
+
+    { x: 130, y: 100 },
+
+    { x: 330, y: 100 },
+
+    { x: 330, y: 400 },
+
+    { x: 530, y: 400 },
+
+    { x: 530, y: 170 },
+
+    { x: 740, y: 170 },
+
+    { x: 810, y: 170 }
+];
+
+
+// ========================================
 // KENTÄN PIIRTO
-// -------------------------
+// ========================================
 
 function drawMap() {
 
     // Tausta
     ctx.fillStyle = "#4a8f45";
+
     ctx.fillRect(
         0,
         0,
@@ -94,46 +144,104 @@ function drawMap() {
         canvas.height
     );
 
-    // Vihollisten reitti
-    ctx.fillStyle = "#c2a36b";
 
-    ctx.fillRect(
-        0,
-        220,
-        800,
-        60
+    // Reitti
+    ctx.strokeStyle = "#c2a36b";
+    ctx.lineWidth = 60;
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        path[0].x,
+        path[0].y
     );
+
+    for (
+        let i = 1;
+        i < path.length;
+        i++
+    ) {
+
+        ctx.lineTo(
+            path[i].x,
+            path[i].y
+        );
+    }
+
+    ctx.stroke();
+
+
+    // Reitin keskiviiva
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.15)";
+
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        path[0].x,
+        path[0].y
+    );
+
+    for (
+        let i = 1;
+        i < path.length;
+        i++
+    ) {
+
+        ctx.lineTo(
+            path[i].x,
+            path[i].y
+        );
+    }
+
+    ctx.stroke();
+
 
     // Tukikohta
     ctx.fillStyle = "#444";
 
     ctx.fillRect(
         740,
-        190,
+        110,
         60,
-        120
+        60
     );
 
     ctx.fillStyle = "white";
-    ctx.font = "16px Arial";
+
+    ctx.font =
+        "14px Arial";
 
     ctx.fillText(
         "TUKIKOHTA",
         735,
-        180
+        100
     );
 
-    // Tornin rakennuspaikan esikatselu
-    if (isValidTowerPosition(mouseX, mouseY)) {
+
+    // Tornin sijoituksen esikatselu
+    if (
+        isValidTowerPosition(
+            mouseX,
+            mouseY
+        )
+    ) {
 
         ctx.strokeStyle =
-            "rgba(0,255,0,0.5)";
+            "rgba(0,255,0,0.7)";
 
     } else {
 
         ctx.strokeStyle =
-            "rgba(255,0,0,0.5)";
+            "rgba(255,0,0,0.7)";
     }
+
+    ctx.lineWidth = 2;
 
     ctx.beginPath();
 
@@ -149,56 +257,68 @@ function drawMap() {
 }
 
 
-// -------------------------
-// VIHOLLISEN LUONTI
-// -------------------------
+// ========================================
+// VIHOLLISTEN LUONTI
+// ========================================
 
 function createEnemy() {
 
     let type = "normal";
 
-    const random = Math.random();
+    const random =
+        Math.random();
 
-    // Fast-vihollisia aallosta 3 alkaen
+
+    // Fast-vihollisia
     if (
-        wave >= 3 &&
-        random < 0.20
+        wave >= 2 &&
+        random < 0.30
     ) {
 
         type = "fast";
+    }
 
-    // Tank-vihollisia aallosta 5 alkaen
-    } else if (
-        wave >= 5 &&
-        random < 0.15
+
+    // Tankkeja
+    if (
+        wave >= 4 &&
+        random < 0.18
     ) {
 
         type = "tank";
     }
 
+
     const template =
         enemyTypes[type];
 
+
     const health =
         template.health +
-        wave * 10;
+        wave * 25;
+
+
+    const speed =
+        template.speed +
+        wave * 0.04;
+
 
     enemies.push({
 
-        x: -20,
+        x: path[0].x,
 
-        y: 250,
+        y: path[0].y,
+
+        pathIndex: 0,
 
         type: type,
 
-        speed:
-            template.speed +
-            wave * 0.05,
+        speed: speed,
 
         size:
             type === "tank"
-                ? 25
-                : 20,
+                ? 27
+                : 18,
 
         health: health,
 
@@ -208,20 +328,116 @@ function createEnemy() {
             template.reward
     });
 
+
     enemiesSpawned++;
 }
 
 
-// -------------------------
+// ========================================
+// VIHOLLISTEN LIIKE
+// ========================================
+
+function updateEnemies() {
+
+    // Käydään takaperin,
+    // jotta poistaminen on turvallista
+
+    for (
+        let i = enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const enemy =
+            enemies[i];
+
+
+        const nextPoint =
+            path[
+                enemy.pathIndex + 1
+            ];
+
+
+        // Vihollinen on saavuttamassa
+        // seuraavaa reittipistettä
+
+        if (!nextPoint) {
+
+            lives--;
+
+            enemies.splice(i, 1);
+
+            updateUI();
+
+            if (
+                lives <= 0
+            ) {
+
+                gameOver();
+            }
+
+            continue;
+        }
+
+
+        const dx =
+            nextPoint.x -
+            enemy.x;
+
+        const dy =
+            nextPoint.y -
+            enemy.y;
+
+
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        // Seuraavaan pisteeseen
+        if (
+            distance <=
+            enemy.speed
+        ) {
+
+            enemy.x =
+                nextPoint.x;
+
+            enemy.y =
+                nextPoint.y;
+
+            enemy.pathIndex++;
+
+        } else {
+
+            enemy.x +=
+                (dx / distance) *
+                enemy.speed;
+
+            enemy.y +=
+                (dy / distance) *
+                enemy.speed;
+        }
+    }
+}
+
+
+// ========================================
 // VIHOLLISTEN PIIRTO
-// -------------------------
+// ========================================
 
 function drawEnemies() {
 
-    enemies.forEach(enemy => {
+    enemies.forEach(
+        enemy => {
 
         const type =
-            enemyTypes[enemy.type];
+            enemyTypes[
+                enemy.type
+            ];
+
 
         // Vihollinen
         ctx.fillStyle =
@@ -239,8 +455,24 @@ function drawEnemies() {
 
         ctx.fill();
 
+
+        // Tankille reunus
+        if (
+            enemy.type === "tank"
+        ) {
+
+            ctx.strokeStyle =
+                "white";
+
+            ctx.lineWidth = 2;
+
+            ctx.stroke();
+        }
+
+
         // HP-palkin tausta
-        ctx.fillStyle = "black";
+        ctx.fillStyle =
+            "black";
 
         ctx.fillRect(
             enemy.x - 25,
@@ -249,64 +481,35 @@ function drawEnemies() {
             6
         );
 
+
         // HP
-        ctx.fillStyle = "lime";
+        ctx.fillStyle =
+            "lime";
+
+        const healthPercent =
+            Math.max(
+                0,
+                enemy.health /
+                enemy.maxHealth
+            );
 
         ctx.fillRect(
             enemy.x - 25,
             enemy.y - 35,
             50 *
-            (enemy.health /
-            enemy.maxHealth),
+            healthPercent,
             6
         );
     });
 }
 
 
-// -------------------------
-// VIHOLLISTEN LIIKE
-// -------------------------
-
-function updateEnemies() {
-
-    enemies.forEach(
-        (enemy, index) => {
-
-        enemy.x += enemy.speed;
-
-        // Vihollinen saavuttaa tukikohdan
-        if (
-            enemy.x >
-            canvas.width
-        ) {
-
-            lives--;
-
-            updateUI();
-
-            enemies.splice(
-                index,
-                1
-            );
-
-            // Game Over
-            if (lives <= 0) {
-
-                gameOver();
-            }
-        }
-    });
-}
-
-
-// -------------------------
+// ========================================
 // AALLOT
-// -------------------------
+// ========================================
 
 function updateWave() {
 
-    // Luodaan uusia vihollisia
     if (
         enemiesSpawned <
         enemiesToSpawn
@@ -314,17 +517,34 @@ function updateWave() {
 
         spawnTimer--;
 
+
         if (
             spawnTimer <= 0
         ) {
 
             createEnemy();
 
-            spawnTimer = 80;
+
+            // Viholliset tulevat
+            // nopeammin myöhemmissä
+            // aalloissa
+
+            spawnTimer =
+                Math.max(
+                    25,
+                    70 -
+                    wave * 3
+                );
         }
 
-    // Kaikki viholliset ovat kuolleet
-    } else if (
+        return;
+    }
+
+
+    // Seuraava aalto vasta kun
+    // kaikki viholliset ovat kuolleet
+
+    if (
         enemies.length === 0
     ) {
 
@@ -332,46 +552,89 @@ function updateWave() {
 
         enemiesSpawned = 0;
 
-        enemiesToSpawn =
-            5 + wave * 2;
 
-        spawnTimer = 100;
+        // Enemmän vihollisia
+        enemiesToSpawn =
+            8 +
+            wave * 4;
+
+
+        spawnTimer = 90;
 
         updateUI();
     }
 }
 
 
-// -------------------------
-// TORNIN SIJOITTAMINEN
-// -------------------------
+// ========================================
+// TORNIN SIJOITUS
+// ========================================
 
 function isValidTowerPosition(
     x,
     y
 ) {
 
-    // Ei saa rakentaa reitille
+    // Ei canvasin ulkopuolelle
     if (
-        y > 220 &&
-        y < 280
+        x < 30 ||
+        x > 770 ||
+        y < 30 ||
+        y > 470
     ) {
 
         return false;
     }
 
-    // Ei saa rakentaa tukikohdan päälle
+
+    // Ei tukikohdan päälle
     if (
         x > 710 &&
-        x < 800 &&
-        y > 160 &&
-        y < 330
+        y > 80 &&
+        y < 200
     ) {
 
         return false;
     }
 
-    // Ei saa rakentaa toisen tornin päälle
+
+    // Ei reitin lähelle
+    for (
+        let i = 0;
+        i < path.length - 1;
+        i++
+    ) {
+
+        const a =
+            path[i];
+
+        const b =
+            path[i + 1];
+
+
+        const distance =
+            distanceToLineSegment(
+                x,
+                y,
+                a.x,
+                a.y,
+                b.x,
+                b.y
+            );
+
+
+        if (
+            distance < 45
+        ) {
+
+            return false;
+        }
+    }
+
+
+    // Ei liian lähelle
+    // toista tornia
+
     for (
         const tower of towers
     ) {
@@ -388,6 +651,7 @@ function isValidTowerPosition(
                 dy * dy
             );
 
+
         if (
             distance <
             towerSpacing
@@ -397,13 +661,82 @@ function isValidTowerPosition(
         }
     }
 
+
     return true;
 }
 
 
-// -------------------------
+// ========================================
+// ETÄISYYS REITISTÄ
+// ========================================
+
+function distanceToLineSegment(
+    px,
+    py,
+    x1,
+    y1,
+    x2,
+    y2
+) {
+
+    const dx =
+        x2 - x1;
+
+    const dy =
+        y2 - y1;
+
+
+    if (
+        dx === 0 &&
+        dy === 0
+    ) {
+
+        return Math.sqrt(
+            (px - x1) *
+            (px - x1) +
+            (py - y1) *
+            (py - y1)
+        );
+    }
+
+
+    let t =
+        (
+            (px - x1) * dx +
+            (py - y1) * dy
+        ) /
+        (
+            dx * dx +
+            dy * dy
+        );
+
+
+    t =
+        Math.max(
+            0,
+            Math.min(1, t)
+        );
+
+
+    const closestX =
+        x1 + t * dx;
+
+    const closestY =
+        y1 + t * dy;
+
+
+    return Math.sqrt(
+        (px - closestX) *
+        (px - closestX) +
+        (py - closestY) *
+        (py - closestY)
+    );
+}
+
+
+// ========================================
 // HIIRI
-// -------------------------
+// ========================================
 
 canvas.addEventListener(
     "mousemove",
@@ -412,9 +745,11 @@ canvas.addEventListener(
         const rect =
             canvas.getBoundingClientRect();
 
+
         mouseX =
             event.clientX -
             rect.left;
+
 
         mouseY =
             event.clientY -
@@ -423,54 +758,59 @@ canvas.addEventListener(
 );
 
 
-// -------------------------
-// KLIKKAUS
-// -------------------------
+// ========================================
+// TORNIN SIJOITTAMINEN
+// ========================================
 
 canvas.addEventListener(
     "click",
     event => {
 
-        if (!gameRunning) {
+        if (
+            !gameRunning
+        ) {
+
             return;
         }
+
 
         const rect =
             canvas.getBoundingClientRect();
 
+
         const x =
             event.clientX -
             rect.left;
+
 
         const y =
             event.clientY -
             rect.top;
 
 
-        // Tarkistetaan klikattiinko
-        // olemassa olevaa tornia
+        // Klikattiinko tornia?
+
         const clickedTower =
-            towers.find(tower => {
+            towers.find(
+                tower => {
 
-            const dx =
-                tower.x - x;
+                const dx =
+                    tower.x - x;
 
-            const dy =
-                tower.y - y;
+                const dy =
+                    tower.y - y;
 
-            const distance =
-                Math.sqrt(
+                return Math.sqrt(
                     dx * dx +
                     dy * dy
-                );
+                ) < 20;
+            }
+        );
 
-            return distance < 20;
-        });
 
-
-        // Jos torni löytyi,
-        // päivitetään sitä
-        if (clickedTower) {
+        if (
+            clickedTower
+        ) {
 
             upgradeTower(
                 clickedTower
@@ -480,7 +820,8 @@ canvas.addEventListener(
         }
 
 
-        // Tarkistetaan rakennuspaikka
+        // Voiko tähän rakentaa?
+
         if (
             !isValidTowerPosition(
                 x,
@@ -492,7 +833,8 @@ canvas.addEventListener(
         }
 
 
-        // Rahaa oltava tarpeeksi
+        // Onko rahaa?
+
         if (
             money <
             towerCost
@@ -502,14 +844,15 @@ canvas.addEventListener(
         }
 
 
-        // Luodaan torni
+        // Uusi torni
+
         towers.push({
 
             x: x,
 
             y: y,
 
-            range: 150,
+            range: 145,
 
             damage: 25,
 
@@ -522,21 +865,23 @@ canvas.addEventListener(
         money -=
             towerCost;
 
+
         updateUI();
     }
 );
 
 
-// -------------------------
+// ========================================
 // TORNIN PÄIVITYS
-// -------------------------
+// ========================================
 
 function upgradeTower(
     tower
 ) {
 
     const upgradeCost =
-        tower.level * 25;
+        tower.level * 50;
+
 
     if (
         money <
@@ -546,27 +891,67 @@ function upgradeTower(
         return;
     }
 
+
     money -=
         upgradeCost;
 
+
     tower.level++;
 
-    tower.damage += 15;
+    tower.damage += 20;
 
-    tower.range += 10;
+    tower.range += 15;
+
 
     updateUI();
 }
 
 
-// -------------------------
+// ========================================
 // TORNIT
-// -------------------------
+// ========================================
 
 function drawTowers() {
 
     towers.forEach(
         tower => {
+
+        // Tornin range
+        // näkyy kun hiiri on tornin päällä
+
+        const mouseDistance =
+            Math.sqrt(
+                (
+                    tower.x -
+                    mouseX
+                ) ** 2 +
+                (
+                    tower.y -
+                    mouseY
+                ) ** 2
+            );
+
+
+        if (
+            mouseDistance < 20
+        ) {
+
+            ctx.strokeStyle =
+                "rgba(255,255,255,0.25)";
+
+            ctx.beginPath();
+
+            ctx.arc(
+                tower.x,
+                tower.y,
+                tower.range,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.stroke();
+        }
+
 
         // Tornin pohja
         ctx.fillStyle =
@@ -580,7 +965,7 @@ function drawTowers() {
         );
 
 
-        // Tornin keskiosa
+        // Keskiosa
         ctx.fillStyle =
             "#222";
 
@@ -597,7 +982,7 @@ function drawTowers() {
         ctx.fill();
 
 
-        // Tornin level
+        // Level
         ctx.fillStyle =
             "white";
 
@@ -613,9 +998,9 @@ function drawTowers() {
 }
 
 
-// -------------------------
+// ========================================
 // TORNIT AMPUVAT
-// -------------------------
+// ========================================
 
 function updateTowers() {
 
@@ -634,8 +1019,8 @@ function updateTowers() {
 
         let target = null;
 
-        let closestDistance =
-            Infinity;
+        let bestProgress =
+            -Infinity;
 
 
         enemies.forEach(
@@ -649,6 +1034,7 @@ function updateTowers() {
                 enemy.y -
                 tower.y;
 
+
             const distance =
                 Math.sqrt(
                     dx * dx +
@@ -658,21 +1044,31 @@ function updateTowers() {
 
             if (
                 distance <=
-                tower.range &&
-                distance <
-                closestDistance
+                tower.range
             ) {
 
-                target =
-                    enemy;
+                // Tornit tähtäävät
+                // viholliseen, joka on
+                // pisimmällä reitillä
 
-                closestDistance =
-                    distance;
+                if (
+                    enemy.pathIndex >
+                    bestProgress
+                ) {
+
+                    bestProgress =
+                        enemy.pathIndex;
+
+                    target =
+                        enemy;
+                }
             }
         });
 
 
-        if (target) {
+        if (
+            target
+        ) {
 
             bullets.push({
 
@@ -682,42 +1078,47 @@ function updateTowers() {
 
                 target: target,
 
-                speed: 5,
+                speed: 6,
 
                 damage:
                     tower.damage
             });
 
 
+            // Hitaampi ampuminen
+
             tower.cooldown =
-                40;
+                65;
         }
     });
 }
 
 
-// -------------------------
-// LUOTIEN PÄIVITYS
-// -------------------------
+// ========================================
+// LUODIT
+// ========================================
 
 function updateBullets() {
 
-    bullets.forEach(
-        (bullet, bulletIndex) => {
+    for (
+        let i = bullets.length - 1;
+        i >= 0;
+        i--
+    ) {
 
-        // Kohde on kuollut
+        const bullet =
+            bullets[i];
+
+
         if (
             !enemies.includes(
                 bullet.target
             )
         ) {
 
-            bullets.splice(
-                bulletIndex,
-                1
-            );
+            bullets.splice(i, 1);
 
-            return;
+            continue;
         }
 
 
@@ -729,6 +1130,7 @@ function updateBullets() {
             bullet.target.y -
             bullet.y;
 
+
         const distance =
             Math.sqrt(
                 dx * dx +
@@ -736,22 +1138,21 @@ function updateBullets() {
             );
 
 
-        // Luoti osuu
+        // Osuma
+
         if (
-            distance < 5
+            distance < 7
         ) {
 
             bullet.target.health -=
                 bullet.damage;
 
 
-            bullets.splice(
-                bulletIndex,
-                1
-            );
+            bullets.splice(i, 1);
 
 
             // Vihollinen kuolee
+
             if (
                 bullet.target.health <=
                 0
@@ -774,12 +1175,10 @@ function updateBullets() {
                 }
 
 
-                // Rahaa
                 money +=
                     bullet.target.reward;
 
 
-                // Pisteitä
                 score +=
                     bullet.target.reward;
 
@@ -787,29 +1186,31 @@ function updateBullets() {
                 updateUI();
             }
 
-        } else {
 
-            // Luoti liikkuu kohti vihollista
-            bullet.x +=
-                (dx / distance) *
-                bullet.speed;
-
-            bullet.y +=
-                (dy / distance) *
-                bullet.speed;
+            continue;
         }
-    });
+
+
+        bullet.x +=
+            (dx / distance) *
+            bullet.speed;
+
+        bullet.y +=
+            (dy / distance) *
+            bullet.speed;
+    }
 }
 
 
-// -------------------------
+// ========================================
 // LUOTIEN PIIRTO
-// -------------------------
+// ========================================
 
 function drawBullets() {
 
     ctx.fillStyle =
         "yellow";
+
 
     bullets.forEach(
         bullet => {
@@ -829,53 +1230,298 @@ function drawBullets() {
 }
 
 
-// -------------------------
-// KÄYTTÖLIITTYMÄN PÄIVITYS
-// -------------------------
+// ========================================
+// KÄYTTÖLIITTYMÄ
+// ========================================
 
 function updateUI() {
 
     document.getElementById(
         "lives"
-    ).textContent = lives;
+    ).textContent =
+        lives;
+
 
     document.getElementById(
         "money"
-    ).textContent = money;
+    ).textContent =
+        money;
+
 
     document.getElementById(
         "wave"
-    ).textContent = wave;
+    ).textContent =
+        wave;
+
 
     document.getElementById(
         "score"
-    ).textContent = score;
+    ).textContent =
+        score;
 }
 
 
-// -------------------------
+// ========================================
+// TOP 10 HAKEMINEN
+// ========================================
+
+async function loadLeaderboard() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/scores"
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                "Scores API error"
+            );
+        }
+
+
+        const scores =
+            await response.json();
+
+
+        leaderboard.innerHTML =
+            "<h2>🏆 TOP 10</h2>";
+
+
+        if (
+            scores.length === 0
+        ) {
+
+            leaderboard.innerHTML +=
+                "<p>Ei vielä tuloksia.</p>";
+
+            return;
+        }
+
+
+        scores.forEach(
+            (entry, index) => {
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+
+            row.style.padding =
+                "6px";
+
+
+            row.style.fontSize =
+                "18px";
+
+
+            row.innerHTML =
+                `${index + 1}. 
+                <strong>
+                ${escapeHtml(
+                    entry.playerName
+                )}
+                </strong>
+                — ${entry.score} pistettä
+                — aalto ${entry.wave}`;
+
+
+            leaderboard.appendChild(
+                row
+            );
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Leaderboard error:",
+            error
+        );
+
+
+        leaderboard.innerHTML =
+            "<h2>🏆 TOP 10</h2>" +
+            "<p>TOP 10 -listaa ei voitu ladata.</p>";
+    }
+}
+
+
+// ========================================
+// TURVALLINEN TEKSTI
+// ========================================
+
+function escapeHtml(
+    text
+) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+}
+
+
+// ========================================
+// PISTEIDEN TALLENNUS
+// ========================================
+
+async function saveScore() {
+
+    if (
+        scoreSaved
+    ) {
+
+        return;
+    }
+
+
+    scoreSaved = true;
+
+
+    let playerName =
+        prompt(
+            "Peli loppui!\n\n" +
+            "Anna pelaajanimesi TOP 10 -listaa varten:"
+        );
+
+
+    if (
+        !playerName ||
+        playerName.trim() === ""
+    ) {
+
+        playerName =
+            "Tuntematon";
+    }
+
+
+    playerName =
+        playerName
+            .trim()
+            .substring(0, 20);
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/scores",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            playerName:
+                                playerName,
+
+                            score:
+                                score,
+
+                            wave:
+                                wave
+                        })
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                result.message ||
+                "Tallennus epäonnistui"
+            );
+        }
+
+
+        console.log(
+            "Pisteet tallennettu:",
+            result
+        );
+
+
+        // Päivitetään TOP 10
+        await loadLeaderboard();
+
+
+    } catch (error) {
+
+        console.error(
+            "Score save error:",
+            error
+        );
+
+
+        alert(
+            "Pisteiden tallennus epäonnistui.\n" +
+            "Tarkista, että serveri ja MongoDB toimivat."
+        );
+    }
+}
+
+
+// ========================================
 // GAME OVER
-// -------------------------
+// ========================================
 
 function gameOver() {
 
+    if (
+        !gameRunning
+    ) {
+
+        return;
+    }
+
+
     gameRunning = false;
+
 
     finalScore.textContent =
         score;
 
+
     finalWave.textContent =
         wave;
+
 
     gameOverScreen.classList.remove(
         "hidden"
     );
+
+
+    // Tallennetaan tulos
+    saveScore();
 }
 
 
-// -------------------------
+// ========================================
 // PELIN ALOITUS
-// -------------------------
+// ========================================
 
 startButton.addEventListener(
     "click",
@@ -891,9 +1537,9 @@ startButton.addEventListener(
 });
 
 
-// -------------------------
-// PELIN Uudelleenkäynnistys
-// -------------------------
+// ========================================
+// UUDELLEENALOITUS
+// ========================================
 
 restartButton.addEventListener(
     "click",
@@ -903,13 +1549,15 @@ restartButton.addEventListener(
 });
 
 
-// -------------------------
+// ========================================
 // PELISILMUKKA
-// -------------------------
+// ========================================
 
 function gameLoop() {
 
-    if (gameRunning) {
+    if (
+        gameRunning
+    ) {
 
         drawMap();
 
@@ -928,14 +1576,19 @@ function gameLoop() {
         drawBullets();
     }
 
+
     requestAnimationFrame(
         gameLoop
     );
 }
 
 
-// -------------------------
-// KÄYNNISTETÄÄN PELISILMUKKA
-// -------------------------
+// ========================================
+// KÄYNNISTYS
+// ========================================
+
+updateUI();
+
+loadLeaderboard();
 
 gameLoop();
