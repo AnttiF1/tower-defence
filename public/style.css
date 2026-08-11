@@ -24,19 +24,34 @@ body {
 }
 
 
-.game-wrapper {
-    width: min(1000px, 95%);
-    margin: 0 auto;
-    padding: 30px 0 40px;
+button {
+    font-family: inherit;
 }
 
 
-/* =========================
+/* ========================================
+   WRAPPER
+======================================== */
+
+.game-wrapper {
+    width: min(1000px, 95%);
+
+    margin: 0 auto;
+
+    padding:
+        30px
+        0
+        45px;
+}
+
+
+/* ========================================
    HEADER
-========================= */
+======================================== */
 
 .game-header {
     text-align: center;
+
     margin-bottom: 22px;
 }
 
@@ -45,6 +60,7 @@ body {
     margin: 0;
 
     font-size: 38px;
+
     font-weight: 800;
 
     letter-spacing: -1px;
@@ -55,12 +71,14 @@ body {
     margin: 7px 0 0;
 
     color: #9ca3af;
+
+    font-size: 14px;
 }
 
 
-/* =========================
+/* ========================================
    STATS
-========================= */
+======================================== */
 
 .stats {
     display: grid;
@@ -76,21 +94,37 @@ body {
 
 .stat {
     display: flex;
+
     align-items: center;
 
     gap: 12px;
 
-    padding: 13px 16px;
+    padding:
+        13px
+        16px;
 
     background: #151c28;
 
-    border: 1px solid #263244;
+    border:
+        1px solid
+        #263244;
 
     border-radius: 12px;
 
     box-shadow:
         0 5px 20px
         rgba(0, 0, 0, 0.2);
+
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
+}
+
+
+.stat:hover {
+    transform: translateY(-2px);
+
+    border-color: #3b4c65;
 }
 
 
@@ -105,6 +139,7 @@ body {
     color: #7f8b9d;
 
     font-size: 10px;
+
     font-weight: 700;
 
     letter-spacing: 1px;
@@ -120,9 +155,9 @@ body {
 }
 
 
-/* =========================
-   GAME
-========================= */
+/* ========================================
+   GAME AREA
+======================================== */
 
 .game-area {
     display: flex;
@@ -133,22 +168,30 @@ body {
 }
 
 
+/* ========================================
+   GAME CONTAINER
+======================================== */
+
 #game-container {
     position: relative;
 
     width: 100%;
 
-    background: #111827;
-
     padding: 8px;
 
-    border-radius: 16px;
+    background: #111827;
 
-    border: 1px solid #2b394d;
+    border:
+        1px solid
+        #2b394d;
+
+    border-radius: 16px;
 
     box-shadow:
         0 15px 45px
         rgba(0, 0, 0, 0.35);
+
+    overflow: hidden;
 }
 
 
@@ -156,17 +199,20 @@ body {
     display: block;
 
     width: 100%;
+
     height: auto;
 
     border-radius: 10px;
 
     background: #4a8f45;
+
+    cursor: crosshair;
 }
 
 
-/* =========================
+/* ========================================
    GAME SCREENS
-========================= */
+======================================== */
 
 .game-screen {
     position: absolute;
@@ -176,6 +222,7 @@ body {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     background:
@@ -183,7 +230,10 @@ body {
 
     border-radius: 10px;
 
-    backdrop-filter: blur(4px);
+    backdrop-filter:
+        blur(5px);
+
+    z-index: 10;
 }
 
 
@@ -193,35 +243,72 @@ body {
 
 
 .screen-card {
-    width: min(380px, 85%);
+    width:
+        min(
+            400px,
+            85%
+        );
 
-    padding: 32px;
+    padding: 34px;
 
     text-align: center;
 
-    background: #171f2d;
+    background:
+        linear-gradient(
+            145deg,
+            #1b2636,
+            #141c29
+        );
 
-    border: 1px solid #344257;
+    border:
+        1px solid
+        #344257;
 
     border-radius: 18px;
 
     box-shadow:
         0 20px 60px
-        rgba(0, 0, 0, 0.5);
+        rgba(0, 0, 0, 0.55);
+
+    animation:
+        screenAppear 0.3s ease;
+}
+
+
+@keyframes screenAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.95)
+            translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
 }
 
 
 .big-icon {
-    font-size: 48px;
+    font-size: 52px;
 
     margin-bottom: 8px;
 }
 
 
 .screen-card h2 {
-    margin: 5px 0 10px;
+    margin:
+        5px
+        0
+        10px;
 
-    font-size: 28px;
+    font-size: 29px;
 }
 
 
@@ -230,18 +317,23 @@ body {
 
     line-height: 1.5;
 
-    margin-bottom: 25px;
+    margin:
+        0
+        0
+        25px;
 }
 
 
-/* =========================
-   BUTTON
-========================= */
+/* ========================================
+   MAIN BUTTON
+======================================== */
 
 .main-button {
     border: 0;
 
-    padding: 13px 28px;
+    padding:
+        13px
+        28px;
 
     border-radius: 10px;
 
@@ -255,16 +347,20 @@ body {
     color: white;
 
     font-size: 15px;
+
     font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
 }
 
 
 .main-button:hover {
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
 
     box-shadow:
         0 8px 20px
@@ -272,23 +368,35 @@ body {
 }
 
 
-/* =========================
+.main-button:active {
+    transform:
+        translateY(0);
+}
+
+
+/* ========================================
    TOWER PANEL
-========================= */
+======================================== */
 
 .tower-panel {
     padding: 18px;
 
     background: #151c28;
 
-    border: 1px solid #263244;
+    border:
+        1px solid
+        #263244;
 
     border-radius: 14px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.18);
 }
 
 
 .panel-header {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 
@@ -300,7 +408,10 @@ body {
 
 
 .panel-header p {
-    margin: 5px 0 0;
+    margin:
+        5px
+        0
+        0;
 
     color: #8d99aa;
 
@@ -308,28 +419,9 @@ body {
 }
 
 
-.tower-section {
-    margin-bottom: 15px;
-}
-
-
-.section-title {
-    margin-bottom: 10px;
-
-    color: #9ca3af;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    text-transform: uppercase;
-
-    letter-spacing: 0.7px;
-}
-
-
-/* =========================
+/* ========================================
    TOWER LIST
-========================= */
+======================================== */
 
 .tower-list {
     display: grid;
@@ -340,10 +432,6 @@ body {
     gap: 10px;
 }
 
-
-/* =========================
-   TOWER CARDS
-========================= */
 
 .tower-card {
     display: flex;
@@ -362,25 +450,54 @@ body {
 
     background: #1b2432;
 
-    border: 1px solid #303c4f;
+    border:
+        1px solid
+        #303c4f;
 
     border-radius: 11px;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition:
+        background 0.2s,
+        transform 0.2s,
+        border-color 0.2s;
 }
 
 
 .tower-card:hover {
     background: #232e3e;
 
-    transform: translateY(-2px);
+    transform:
+        translateY(-2px);
+}
+
+
+.tower-card:active {
+    transform:
+        translateY(0);
 }
 
 
 .tower-icon {
-    font-size: 26px;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    font-size: 25px;
+
+    background:
+        rgba(255,255,255,0.04);
+
+    border-radius: 9px;
 }
 
 
@@ -413,9 +530,14 @@ body {
     white-space: nowrap;
 
     font-size: 12px;
+
     font-weight: 700;
 }
 
+
+/* ========================================
+   TOWER COLORS
+======================================== */
 
 .tower-card.basic:hover {
     border-color: #3498db;
@@ -432,18 +554,46 @@ body {
 }
 
 
-/* =========================
-   SELECTED TOWER
-========================= */
+/* ========================================
+   HINT
+======================================== */
+
+.hint {
+    margin-top: 13px;
+
+    color: #7f8b9d;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+/* ========================================
+   SELECTED TOWER PANEL
+======================================== */
 
 .tower-info-panel {
-    padding: 15px;
+    animation:
+        panelAppear 0.2s ease;
+}
 
-    background: #1b2432;
 
-    border: 1px solid #344257;
+@keyframes panelAppear {
 
-    border-radius: 12px;
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
 }
 
 
@@ -454,7 +604,11 @@ body {
 
     gap: 12px;
 
-    margin-bottom: 15px;
+    padding-bottom: 14px;
+
+    border-bottom:
+        1px solid
+        #283548;
 }
 
 
@@ -462,18 +616,23 @@ body {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    width: 48px;
-    height: 48px;
+    width: 50px;
 
-    background: #111827;
-
-    border: 1px solid #3a4658;
-
-    border-radius: 10px;
+    height: 50px;
 
     font-size: 27px;
+
+    background:
+        #1b2432;
+
+    border:
+        2px solid
+        #3498db;
+
+    border-radius: 12px;
 }
 
 
@@ -489,15 +648,15 @@ body {
 
     margin-top: 4px;
 
-    color: #8d99aa;
+    color: #8b96a7;
 
     font-size: 12px;
 }
 
 
-/* =========================
+/* ========================================
    TOWER STATS
-========================= */
+======================================== */
 
 .tower-stats {
     display: grid;
@@ -505,31 +664,35 @@ body {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 8px;
+    gap: 9px;
 
-    margin-bottom: 12px;
+    margin:
+        14px
+        0;
 }
 
 
 .tower-stat {
-    padding: 9px;
+    padding: 10px;
 
     text-align: center;
 
-    background: #111827;
+    background: #1b2432;
 
-    border: 1px solid #293548;
+    border:
+        1px solid
+        #2b384b;
 
-    border-radius: 8px;
+    border-radius: 9px;
 }
 
 
 .tower-stat span {
     display: block;
 
-    color: #8d99aa;
+    color: #7f8b9d;
 
-    font-size: 10px;
+    font-size: 11px;
 }
 
 
@@ -538,48 +701,71 @@ body {
 
     margin-top: 4px;
 
-    font-size: 16px;
+    font-size: 18px;
 }
 
 
-/* =========================
+/* ========================================
    TOWER ACTIONS
-========================= */
+======================================== */
 
-.tower-action {
-    width: 100%;
+.tower-actions {
+    display: grid;
 
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 10px;
+}
+
+
+.tower-actions button {
     display: flex;
 
     align-items: center;
 
     justify-content: space-between;
 
-    padding: 11px 13px;
-
-    margin-top: 8px;
-
-    border: 1px solid #39475b;
+    padding:
+        11px
+        13px;
 
     border-radius: 9px;
 
     color: white;
 
-    font-size: 13px;
     font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.2s;
+    transition:
+        transform 0.2s,
+        background 0.2s,
+        opacity 0.2s;
 }
 
 
-.tower-action:hover {
-    transform: translateY(-1px);
+.tower-actions button:hover {
+    transform:
+        translateY(-2px);
 }
 
 
-.tower-action.upgrade {
+.tower-actions button:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+.upgrade-button {
+    border:
+        1px solid
+        #2868bd;
+
     background:
         linear-gradient(
             135deg,
@@ -589,67 +775,57 @@ body {
 }
 
 
-.tower-action.upgrade:hover {
-    box-shadow:
-        0 6px 18px
-        rgba(37, 99, 235, 0.3);
-}
+.sell-button {
+    border:
+        1px solid
+        #246b4b;
 
-
-.tower-action.sell {
-    background: #242d3b;
-
-    color: #cbd5e1;
-}
-
-
-.tower-action.sell:hover {
-    border-color: #f59e0b;
+    background:
+        linear-gradient(
+            135deg,
+            #166534,
+            #14532d
+        );
 }
 
 
 .deselect-button {
     width: 100%;
 
-    margin-top: 9px;
+    margin-top: 10px;
 
-    padding: 8px;
+    padding: 9px;
 
-    border: 0;
+    border:
+        1px solid
+        #303c4f;
 
-    background: transparent;
+    border-radius: 8px;
 
-    color: #7f8b9d;
+    background: #1b2432;
 
-    font-size: 11px;
+    color: #9ca3af;
+
+    font-size: 12px;
 
     cursor: pointer;
+
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 
 .deselect-button:hover {
-    color: #e5e7eb;
+    background: #232e3e;
+
+    color: white;
 }
 
 
-/* =========================
-   HINT
-========================= */
-
-.hint {
-    margin-top: 13px;
-
-    color: #7f8b9d;
-
-    font-size: 12px;
-
-    text-align: center;
-}
-
-
-/* =========================
+/* ========================================
    LEADERBOARD
-========================= */
+======================================== */
 
 .leaderboard {
     margin-top: 18px;
@@ -658,9 +834,15 @@ body {
 
     background: #151c28;
 
-    border: 1px solid #263244;
+    border:
+        1px solid
+        #263244;
 
     border-radius: 14px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.18);
 }
 
 
@@ -683,21 +865,48 @@ body {
 
 
 .leaderboard-title span {
+    display: block;
+
+    margin-top: 3px;
+
     color: #7f8b9d;
 
     font-size: 12px;
 }
 
 
+.leaderboard-icon {
+    font-size: 27px;
+
+    opacity: 0.8;
+}
+
+
+/* ========================================
+   LEADERBOARD ROWS
+======================================== */
+
 .leaderboard > div:not(.leaderboard-title) {
-    padding: 9px 10px;
+    padding:
+        10px
+        12px;
 
     border-bottom:
-        1px solid #252f3e;
+        1px solid
+        #252f3e;
 
     color: #cbd5e1;
 
     font-size: 13px;
+
+    transition:
+        background 0.2s;
+}
+
+
+.leaderboard > div:not(.leaderboard-title):hover {
+    background:
+        rgba(255,255,255,0.025);
 }
 
 
@@ -706,18 +915,33 @@ body {
 }
 
 
-/* =========================
+.leaderboard p {
+    margin: 0;
+
+    padding: 10px;
+
+    color: #7f8b9d;
+
+    font-size: 13px;
+
+    text-align: center;
+}
+
+
+/* ========================================
    RESULT
-========================= */
+======================================== */
 
 .result {
     display: flex;
 
     justify-content: center;
 
-    gap: 35px;
+    gap: 45px;
 
-    margin: 20px 0;
+    margin:
+        20px
+        0;
 }
 
 
@@ -738,15 +962,21 @@ body {
 
 
 .result strong {
-    font-size: 25px;
+    font-size: 27px;
 }
 
 
-/* =========================
+/* ========================================
    FOOTER
-========================= */
+======================================== */
 
 footer {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
     margin-top: 25px;
 
     text-align: center;
@@ -757,9 +987,9 @@ footer {
 }
 
 
-/* =========================
+/* ========================================
    RESPONSIVE
-========================= */
+======================================== */
 
 @media (max-width: 750px) {
 
@@ -785,15 +1015,15 @@ footer {
         grid-template-columns: 1fr;
     }
 
-
-    .tower-stats {
-        grid-template-columns:
-            repeat(3, 1fr);
-    }
 }
 
 
 @media (max-width: 450px) {
+
+    .game-wrapper {
+        width: 97%;
+    }
+
 
     .stats {
         gap: 7px;
@@ -815,22 +1045,30 @@ footer {
     }
 
 
-    .tower-stats {
-        gap: 5px;
-    }
-
-
-    .tower-stat {
-        padding: 7px 4px;
-    }
-
-
-    .tower-stat span {
+    .stat small {
         font-size: 9px;
     }
 
 
-    .tower-stat strong {
-        font-size: 14px;
+    .tower-panel {
+        padding: 14px;
     }
+
+
+    .tower-stats {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .tower-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .result {
+        gap: 30px;
+    }
+
 }

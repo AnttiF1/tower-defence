@@ -3,34 +3,44 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Tower Defense</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
 
 <body>
 
     <div class="game-wrapper">
 
-        <!-- ================================
-             HEADER
-        ================================= -->
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
 
         <header class="game-header">
 
             <div>
                 <h1>🏰 Tower Defense</h1>
-                <p>Puolusta tukikohtaasi vihollisaalloilta</p>
+
+                <p>
+                    Rakenna torneja ja puolusta tukikohtaasi
+                    vihollisaalloilta
+                </p>
             </div>
 
         </header>
 
 
-        <!-- ================================
-             STATS
-        ================================= -->
+        <!-- ================================= -->
+        <!-- STATS -->
+        <!-- ================================= -->
 
         <section class="stats">
 
@@ -76,9 +86,9 @@
         </section>
 
 
-        <!-- ================================
-             GAME
-        ================================= -->
+        <!-- ================================= -->
+        <!-- GAME -->
+        <!-- ================================= -->
 
         <main class="game-area">
 
@@ -87,17 +97,18 @@
                 <canvas
                     id="gameCanvas"
                     width="800"
-                    height="500">
-                </canvas>
+                    height="500"
+                ></canvas>
 
 
-                <!-- ============================
-                     START SCREEN
-                ============================= -->
+                <!-- ================================= -->
+                <!-- START SCREEN -->
+                <!-- ================================= -->
 
                 <div
                     id="startScreen"
-                    class="game-screen">
+                    class="game-screen"
+                >
 
                     <div class="screen-card">
 
@@ -108,14 +119,15 @@
                         <h2>Tower Defense</h2>
 
                         <p>
-                            Rakenna torneja ja pysäytä
-                            viholliset ennen tukikohtaa.
+                            Rakenna torneja, tuhoa viholliset
+                            ja selviydy mahdollisimman pitkälle.
                         </p>
 
                         <button
                             id="startButton"
-                            class="main-button">
-                            Aloita peli
+                            class="main-button"
+                        >
+                            ▶ Aloita peli
                         </button>
 
                     </div>
@@ -123,13 +135,14 @@
                 </div>
 
 
-                <!-- ============================
-                     GAME OVER
-                ============================= -->
+                <!-- ================================= -->
+                <!-- GAME OVER -->
+                <!-- ================================= -->
 
                 <div
                     id="gameOverScreen"
-                    class="game-screen hidden">
+                    class="game-screen hidden"
+                >
 
                     <div class="screen-card">
 
@@ -138,6 +151,11 @@
                         </div>
 
                         <h2>Peli loppui!</h2>
+
+                        <p>
+                            Tukikohtasi puolustus murtui.
+                        </p>
+
 
                         <div class="result">
 
@@ -149,6 +167,7 @@
                                 </strong>
                             </div>
 
+
                             <div>
                                 <span>Aalto</span>
 
@@ -159,10 +178,12 @@
 
                         </div>
 
+
                         <button
                             id="restartButton"
-                            class="main-button">
-                            Pelaa uudelleen
+                            class="main-button"
+                        >
+                            🔄 Pelaa uudelleen
                         </button>
 
                     </div>
@@ -172,45 +193,48 @@
             </div>
 
 
-            <!-- ================================
-                 TOWER PANEL
-            ================================= -->
+            <!-- ================================= -->
+            <!-- TOWER PANEL -->
+            <!-- ================================= -->
 
             <section class="tower-panel">
 
                 <div class="panel-header">
 
                     <div>
-                        <h2>🏰 Tornit</h2>
+
+                        <h2>
+                            🏰 Tornit
+                        </h2>
 
                         <p id="selectedTower">
-                            Valitse torni
+                            Valittu rakennettavaksi:
+                            Basic Tower
                         </p>
+
                     </div>
 
                 </div>
 
 
-                <!-- ============================
-                     TOWER BUILDING
-                ============================= -->
+                <!-- ================================= -->
+                <!-- BUILD PANEL -->
+                <!-- ================================= -->
 
                 <div
                     id="buildPanel"
-                    class="tower-section">
-
-                    <div class="section-title">
-                        <span>🔨 Rakenna uusi torni</span>
-                    </div>
-
+                    class="tower-view"
+                >
 
                     <div class="tower-list">
+
 
                         <!-- BASIC -->
 
                         <button
                             id="basicTowerButton"
-                            class="tower-card basic">
+                            class="tower-card basic"
+                        >
 
                             <div class="tower-icon">
                                 🟦
@@ -239,7 +263,8 @@
 
                         <button
                             id="rapidTowerButton"
-                            class="tower-card rapid">
+                            class="tower-card rapid"
+                        >
 
                             <div class="tower-icon">
                                 🟩
@@ -268,7 +293,8 @@
 
                         <button
                             id="cannonTowerButton"
-                            class="tower-card cannon">
+                            class="tower-card cannon"
+                        >
 
                             <div class="tower-icon">
                                 🟥
@@ -294,22 +320,30 @@
 
                     </div>
 
+
+                    <div class="hint">
+                        💡 Valitse torni ja klikkaa kartalta
+                        rakennuspaikkaa.
+                    </div>
+
                 </div>
 
 
-                <!-- ============================
-                     SELECTED TOWER
-                ============================= -->
+                <!-- ================================= -->
+                <!-- SELECTED TOWER INFO -->
+                <!-- ================================= -->
 
                 <div
                     id="towerInfoPanel"
-                    class="tower-info-panel hidden">
+                    class="tower-info-panel hidden"
+                >
 
                     <div class="selected-tower-header">
 
                         <div
                             id="selectedTowerIcon"
-                            class="selected-tower-icon">
+                            class="selected-tower-icon"
+                        >
                             🟦
                         </div>
 
@@ -334,7 +368,9 @@
 
                         <div class="tower-stat">
 
-                            <span>⚔️ Damage</span>
+                            <span>
+                                ⚔️ Vahinko
+                            </span>
 
                             <strong id="towerDamage">
                                 25
@@ -345,7 +381,9 @@
 
                         <div class="tower-stat">
 
-                            <span>🎯 Kantama</span>
+                            <span>
+                                🎯 Kantama
+                            </span>
 
                             <strong id="towerRange">
                                 145
@@ -356,7 +394,9 @@
 
                         <div class="tower-stat">
 
-                            <span>⏱️ Tulitus</span>
+                            <span>
+                                ⚡ Cooldown
+                            </span>
 
                             <strong id="towerCooldown">
                                 55
@@ -367,55 +407,51 @@
                     </div>
 
 
-                    <!-- UPGRADE -->
+                    <!-- ACTIONS -->
 
-                    <button
-                        id="upgradeTowerButton"
-                        class="tower-action upgrade">
+                    <div class="tower-actions">
 
-                        <span>
-                            ⬆️ Päivitä torni
-                        </span>
+                        <button
+                            id="upgradeTowerButton"
+                            class="upgrade-button"
+                        >
 
-                        <strong id="upgradeCost">
-                            💰 50
-                        </strong>
+                            <span>
+                                ⬆️ Päivitä
+                            </span>
 
-                    </button>
+                            <strong id="upgradeCost">
+                                💰 50
+                            </strong>
+
+                        </button>
 
 
-                    <!-- SELL -->
+                        <button
+                            id="sellTowerButton"
+                            class="sell-button"
+                        >
 
-                    <button
-                        id="sellTowerButton"
-                        class="tower-action sell">
+                            <span>
+                                💰 Myy
+                            </span>
 
-                        <span>
-                            💰 Myy torni
-                        </span>
+                            <strong id="sellValue">
+                                +15
+                            </strong>
 
-                        <strong id="sellValue">
-                            +15
-                        </strong>
+                        </button>
 
-                    </button>
+                    </div>
 
 
                     <button
                         id="deselectTowerButton"
-                        class="deselect-button">
-
-                        ❌ Sulje valinta
-
+                        class="deselect-button"
+                    >
+                        ← Takaisin torneihin
                     </button>
 
-                </div>
-
-
-                <div class="hint">
-                    💡 Valitse torni ja klikkaa kartalta
-                    rakennuspaikkaa. Klikkaa rakennettua
-                    tornia nähdäksesi sen tiedot.
                 </div>
 
             </section>
@@ -423,29 +459,56 @@
         </main>
 
 
-        <!-- ================================
-             LEADERBOARD
-        ================================= -->
+        <!-- ================================= -->
+        <!-- LEADERBOARD -->
+        <!-- ================================= -->
 
         <section
             id="leaderboard"
-            class="leaderboard">
+            class="leaderboard"
+        >
 
             <div class="leaderboard-title">
 
-                <h2>🏆 TOP 10</h2>
+                <div>
 
-                <span>
-                    Parhaat pelaajat
-                </span>
+                    <h2>
+                        🏆 TOP 10
+                    </h2>
+
+                    <span>
+                        Parhaat pelaajat
+                    </span>
+
+                </div>
+
+                <div class="leaderboard-icon">
+                    🥇
+                </div>
 
             </div>
 
         </section>
 
 
+        <!-- ================================= -->
+        <!-- FOOTER -->
+        <!-- ================================= -->
+
         <footer>
-            Tower Defense • MongoDB Leaderboard
+
+            <span>
+                Tower Defense
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                MongoDB Leaderboard
+            </span>
+
         </footer>
 
     </div>
