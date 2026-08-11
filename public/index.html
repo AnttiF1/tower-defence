@@ -1,64 +1,300 @@
 <!DOCTYPE html>
 <html lang="fi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Tower Defense</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>🏰 Tower Defense</h1>
+    <div class="game-wrapper">
 
-    <div class="game-info">
-        <span>❤️ Elämät: <strong id="lives">10</strong></span>
-        <span>💰 Raha: <strong id="money">100</strong></span>
-        <span>🌊 Aalto: <strong id="wave">1</strong></span>
-        <span>🏆 Pisteet: <strong id="score">0</strong></span>
+        <!-- Otsikko -->
+
+        <header class="game-header">
+
+            <div>
+                <h1>🏰 Tower Defense</h1>
+                <p>Puolusta tukikohtaasi vihollisaalloilta</p>
+            </div>
+
+        </header>
+
+
+        <!-- Pelin tilastot -->
+
+        <section class="stats">
+
+            <div class="stat lives">
+                <span>❤️</span>
+                <div>
+                    <small>ELÄMÄT</small>
+                    <strong id="lives">10</strong>
+                </div>
+            </div>
+
+            <div class="stat money">
+                <span>💰</span>
+                <div>
+                    <small>RAHA</small>
+                    <strong id="money">100</strong>
+                </div>
+            </div>
+
+            <div class="stat wave">
+                <span>🌊</span>
+                <div>
+                    <small>AALTO</small>
+                    <strong id="wave">1</strong>
+                </div>
+            </div>
+
+            <div class="stat score">
+                <span>🏆</span>
+                <div>
+                    <small>PISTEET</small>
+                    <strong id="score">0</strong>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Peli -->
+
+        <main class="game-area">
+
+            <div id="game-container">
+
+                <canvas
+                    id="gameCanvas"
+                    width="800"
+                    height="500">
+                </canvas>
+
+
+                <!-- Aloitusruutu -->
+
+                <div
+                    id="startScreen"
+                    class="game-screen">
+
+                    <div class="screen-card">
+
+                        <div class="big-icon">
+                            🏰
+                        </div>
+
+                        <h2>Tower Defense</h2>
+
+                        <p>
+                            Rakenna torneja ja pysäytä
+                            viholliset ennen tukikohtaa.
+                        </p>
+
+                        <button
+                            id="startButton"
+                            class="main-button">
+                            Aloita peli
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Game Over -->
+
+                <div
+                    id="gameOverScreen"
+                    class="game-screen hidden">
+
+                    <div class="screen-card">
+
+                        <div class="big-icon">
+                            💀
+                        </div>
+
+                        <h2>Peli loppui!</h2>
+
+                        <div class="result">
+
+                            <div>
+                                <span>Pisteet</span>
+                                <strong id="finalScore">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div>
+                                <span>Aalto</span>
+                                <strong id="finalWave">
+                                    1
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <button
+                            id="restartButton"
+                            class="main-button">
+                            Pelaa uudelleen
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Tornivalikko -->
+
+            <section class="tower-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h2>🏰 Rakenna torni</h2>
+
+                        <p id="selectedTower">
+                            Valitse torni
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="tower-list">
+
+
+                    <!-- Basic -->
+
+                    <button
+                        id="basicTowerButton"
+                        class="tower-card basic">
+
+                        <div class="tower-icon">
+                            🟦
+                        </div>
+
+                        <div class="tower-info">
+
+                            <strong>
+                                Basic Tower
+                            </strong>
+
+                            <span>
+                                Tasapainoinen torni
+                            </span>
+
+                        </div>
+
+                        <div class="tower-cost">
+                            💰 25
+                        </div>
+
+                    </button>
+
+
+                    <!-- Rapid -->
+
+                    <button
+                        id="rapidTowerButton"
+                        class="tower-card rapid">
+
+                        <div class="tower-icon">
+                            🟩
+                        </div>
+
+                        <div class="tower-info">
+
+                            <strong>
+                                Rapid Tower
+                            </strong>
+
+                            <span>
+                                Nopea tulitus
+                            </span>
+
+                        </div>
+
+                        <div class="tower-cost">
+                            💰 50
+                        </div>
+
+                    </button>
+
+
+                    <!-- Cannon -->
+
+                    <button
+                        id="cannonTowerButton"
+                        class="tower-card cannon">
+
+                        <div class="tower-icon">
+                            🟥
+                        </div>
+
+                        <div class="tower-info">
+
+                            <strong>
+                                Cannon Tower
+                            </strong>
+
+                            <span>
+                                Suuri aluevahinko
+                            </span>
+
+                        </div>
+
+                        <div class="tower-cost">
+                            💰 75
+                        </div>
+
+                    </button>
+
+                </div>
+
+                <div class="hint">
+                    💡 Valitse torni ja klikkaa
+                    kartalta rakennuspaikkaa.
+                    Klikkaa tornia päivittääksesi sen.
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- TOP 10 -->
+
+        <section
+            id="leaderboard"
+            class="leaderboard">
+
+            <div class="leaderboard-title">
+                <h2>🏆 TOP 10</h2>
+                <span>Parhaat pelaajat</span>
+            </div>
+
+        </section>
+
+
+        <footer>
+            Tower Defense • MongoDB Leaderboard
+        </footer>
+
     </div>
 
-    <div id="game-container">
-
-        <canvas
-            id="gameCanvas"
-            width="800"
-            height="500">
-        </canvas>
-
-        <!-- Aloitusruutu -->
-        <div id="startScreen" class="game-screen">
-            <h2>Tower Defense</h2>
-            <p>Puolusta tukikohtaasi vihollisaalloilta!</p>
-
-            <button id="startButton">
-                Aloita peli
-            </button>
-        </div>
-
-        <!-- Game Over -->
-        <div id="gameOverScreen" class="game-screen hidden">
-            <h2>💀 Peli loppui!</h2>
-
-            <p>
-                Pisteet:
-                <strong id="finalScore">0</strong>
-            </p>
-
-            <p>
-                Saavutettu aalto:
-                <strong id="finalWave">1</strong>
-            </p>
-
-            <button id="restartButton">
-                Pelaa uudelleen
-            </button>
-        </div>
-
-    </div>
 
     <script src="game.js"></script>
 
 </body>
-</html>
 
+</html>
