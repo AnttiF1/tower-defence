@@ -32,6 +32,13 @@ let selectedTower = null;
 const towerSpacing = 55;
 
 // ========================================
+// AWS API GATEWAY
+// ========================================
+
+const API_URL =
+    "https://560c02bl0e.execute-api.us-east-1.amazonaws.com";
+
+// ========================================
 // TARGETOINTI
 // ========================================
 
@@ -2710,15 +2717,23 @@ function updateUI() {
 
 // ========================================
 // TOP 10
+// AWS LAMBDA + API GATEWAY
 // ========================================
 
 async function loadLeaderboard() {
 
     try {
 
+        console.log(
+            "Ladataan TOP 10 AWS Lambdasta..."
+        );
+
         const response =
             await fetch(
-                "/api/scores"
+                `${API_URL}/scores`,
+                {
+                    method: "GET"
+                }
             );
 
         if (
@@ -2726,12 +2741,17 @@ async function loadLeaderboard() {
         ) {
 
             throw new Error(
-                "Leaderboard error"
+                `Leaderboard error: ${response.status}`
             );
         }
 
         const scores =
             await response.json();
+
+        console.log(
+            "TOP 10 ladattu:",
+            scores
+        );
 
         const leaderboard =
             document.getElementById(
@@ -2806,11 +2826,28 @@ async function loadLeaderboard() {
             "Leaderboard error:",
             error
         );
+
+        const leaderboard =
+            document.getElementById(
+                "leaderboard"
+            );
+
+        if (leaderboard) {
+
+            leaderboard.innerHTML = `
+                <div class="leaderboard-title">
+                    <h2>🏆 TOP 10</h2>
+                    <span>Parhaat pelaajat</span>
+                </div>
+                <p>Leaderboardin lataaminen epäonnistui.</p>
+            `;
+        }
     }
 }
 
 // ========================================
 // PISTEIDEN TALLENNUS
+// AWS LAMBDA + API GATEWAY
 // ========================================
 
 async function saveScore() {
@@ -2849,9 +2886,13 @@ async function saveScore() {
 
     try {
 
+        console.log(
+            "Tallennetaan pisteet AWS Lambdaan..."
+        );
+
         const response =
             await fetch(
-                "/api/scores",
+                `${API_URL}/scores`,
                 {
 
                     method:
@@ -2878,6 +2919,11 @@ async function saveScore() {
         const result =
             await response.json();
 
+        console.log(
+            "AWS vastaus:",
+            result
+        );
+
         if (
             !response.ok
         ) {
@@ -2889,8 +2935,7 @@ async function saveScore() {
         }
 
         console.log(
-            "Pisteet tallennettu:",
-            result
+            "Pisteet tallennettu onnistuneesti!"
         );
 
         await loadLeaderboard();
@@ -2903,7 +2948,8 @@ async function saveScore() {
         );
 
         alert(
-            "Pisteiden tallennus epäonnistui."
+            "Pisteiden tallennus epäonnistui.\n\n" +
+            "Tarkista selaimen Console."
         );
     }
 }
@@ -2923,11 +2969,17 @@ function gameOver() {
 
     gameRunning = false;
 
-    finalScore.textContent =
-        score;
+    if (finalScore) {
 
-    finalWave.textContent =
-        wave;
+        finalScore.textContent =
+            score;
+    }
+
+    if (finalWave) {
+
+        finalWave.textContent =
+            wave;
+    }
 
     showElement(
         gameOverScreen
