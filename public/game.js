@@ -26,6 +26,9 @@ let mouseY = 250;
 
 let selectedTowerType = "basic";
 
+// Valittu rakennettu torni
+let selectedTower = null;
+
 // Kuinka lähellä toinen torni saa olla
 const towerSpacing = 55;
 
@@ -55,6 +58,45 @@ const finalWave =
 const selectedTowerText =
     document.getElementById("selectedTower");
 
+const buildPanel =
+    document.getElementById("buildPanel");
+
+const towerInfoPanel =
+    document.getElementById("towerInfoPanel");
+
+const selectedTowerIcon =
+    document.getElementById("selectedTowerIcon");
+
+const selectedTowerName =
+    document.getElementById("selectedTowerName");
+
+const selectedTowerLevel =
+    document.getElementById("selectedTowerLevel");
+
+const towerDamage =
+    document.getElementById("towerDamage");
+
+const towerRange =
+    document.getElementById("towerRange");
+
+const towerCooldown =
+    document.getElementById("towerCooldown");
+
+const upgradeTowerButton =
+    document.getElementById("upgradeTowerButton");
+
+const upgradeCost =
+    document.getElementById("upgradeCost");
+
+const sellTowerButton =
+    document.getElementById("sellTowerButton");
+
+const sellValue =
+    document.getElementById("sellValue");
+
+const deselectTowerButton =
+    document.getElementById("deselectTowerButton");
+
 
 // ========================================
 // TORNITYYPIT
@@ -65,6 +107,7 @@ const towerTypes = {
     basic: {
         name: "Basic Tower",
         color: "#3498db",
+        icon: "🟦",
         cost: 25,
         damage: 25,
         range: 145,
@@ -76,6 +119,7 @@ const towerTypes = {
     rapid: {
         name: "Rapid Tower",
         color: "#2ecc71",
+        icon: "🟩",
         cost: 50,
         damage: 12,
         range: 130,
@@ -87,6 +131,7 @@ const towerTypes = {
     cannon: {
         name: "Cannon Tower",
         color: "#e74c3c",
+        icon: "🟥",
         cost: 75,
         damage: 80,
         range: 180,
@@ -161,11 +206,18 @@ function selectTower(type) {
 
     selectedTowerType = type;
 
+    // Jos rakennettu torni oli valittuna,
+    // poistetaan sen valinta.
+    selectedTower = null;
+
+    towerInfoPanel.classList.add("hidden");
+    buildPanel.classList.remove("hidden");
+
     const tower =
         towerTypes[type];
 
     selectedTowerText.textContent =
-        `Valittu: ${tower.name} • 💰 ${tower.cost}`;
+        `Valittu rakennettavaksi: ${tower.name} • 💰 ${tower.cost}`;
 }
 
 
@@ -196,14 +248,95 @@ document
 
 
 // ========================================
-// KURSORIN KOORDINAATIT
+// TORNIN VALINTA UI
 // ========================================
 
-// TÄRKEÄ KORJAUS:
-// Canvas on CSS:llä pienempi kuin oikea
-// 800x500 piirtoalue.
-// Muutetaan hiiren sijainti canvasin
-// omiin koordinaatteihin.
+function showTowerInfo(tower) {
+
+    selectedTower = tower;
+
+    const type =
+        towerTypes[tower.type];
+
+    buildPanel.classList.add("hidden");
+
+    towerInfoPanel.classList.remove("hidden");
+
+    selectedTowerText.textContent =
+        `Valittu: ${type.name}`;
+
+    selectedTowerIcon.textContent =
+        type.icon;
+
+    selectedTowerIcon.style.borderColor =
+        type.color;
+
+    selectedTowerName.textContent =
+        type.name;
+
+    selectedTowerLevel.textContent =
+        `Taso ${tower.level}`;
+
+    towerDamage.textContent =
+        Math.round(tower.damage);
+
+    towerRange.textContent =
+        Math.round(tower.range);
+
+    towerCooldown.textContent =
+        type.cooldown;
+
+    const cost =
+        tower.level * 50;
+
+    upgradeCost.textContent =
+        `💰 ${cost}`;
+
+    sellValue.textContent =
+        `+${getSellValue(tower)}`;
+
+
+    if (
+        money < cost
+    ) {
+
+        upgradeTowerButton.disabled = true;
+
+    } else {
+
+        upgradeTowerButton.disabled = false;
+    }
+}
+
+
+// ========================================
+// TORNIN VALINNAN POISTO
+// ========================================
+
+function deselectTower() {
+
+    selectedTower = null;
+
+    towerInfoPanel.classList.add("hidden");
+
+    buildPanel.classList.remove("hidden");
+
+    selectedTowerText.textContent =
+        `Valittu rakennettavaksi: ${
+            towerTypes[selectedTowerType].name
+        }`;
+}
+
+
+deselectTowerButton.addEventListener(
+    "click",
+    deselectTower
+);
+
+
+// ========================================
+// KURSORIN KOORDINAATIT
+// ========================================
 
 function updateMousePosition(event) {
 
@@ -307,78 +440,118 @@ function drawMap() {
 
     // Rakennuspaikan esikatselu
 
-    const valid =
-        isValidTowerPosition(
+    if (
+        !selectedTower &&
+        gameRunning
+    ) {
+
+        const valid =
+            isValidTowerPosition(
+                mouseX,
+                mouseY
+            );
+
+        const tower =
+            towerTypes[
+                selectedTowerType
+            ];
+
+
+        // Kantaman rinkula
+
+        ctx.beginPath();
+
+        ctx.arc(
             mouseX,
-            mouseY
+            mouseY,
+            tower.range,
+            0,
+            Math.PI * 2
         );
 
-    const tower =
-        towerTypes[
-            selectedTowerType
-        ];
+        ctx.fillStyle =
+            valid
+                ? "rgba(46, 204, 113, 0.08)"
+                : "rgba(231, 76, 60, 0.08)";
+
+        ctx.fill();
+
+        ctx.strokeStyle =
+            valid
+                ? "rgba(46, 204, 113, 0.75)"
+                : "rgba(231, 76, 60, 0.75)";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
 
 
-    // Kantaman rinkula
+        // Tornin esikatselu
 
-    ctx.beginPath();
+        ctx.beginPath();
 
-    ctx.arc(
-        mouseX,
-        mouseY,
-        tower.range,
-        0,
-        Math.PI * 2
-    );
+        ctx.arc(
+            mouseX,
+            mouseY,
+            20,
+            0,
+            Math.PI * 2
+        );
 
-    ctx.fillStyle =
-        valid
-            ? "rgba(46, 204, 113, 0.08)"
-            : "rgba(231, 76, 60, 0.08)";
+        ctx.fillStyle =
+            valid
+                ? tower.color
+                : "#e74c3c";
 
-    ctx.fill();
+        ctx.globalAlpha = 0.45;
 
-    ctx.strokeStyle =
-        valid
-            ? "rgba(46, 204, 113, 0.75)"
-            : "rgba(231, 76, 60, 0.75)";
+        ctx.fill();
 
-    ctx.lineWidth = 2;
+        ctx.globalAlpha = 1;
 
-    ctx.stroke();
+        ctx.strokeStyle =
+            valid
+                ? "#fff"
+                : "#ff5555";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+    }
 
 
-    // Tornin esikatselu
+    // Valitun tornin kantama
 
-    ctx.beginPath();
+    if (
+        selectedTower
+    ) {
 
-    ctx.arc(
-        mouseX,
-        mouseY,
-        20,
-        0,
-        Math.PI * 2
-    );
+        ctx.beginPath();
 
-    ctx.fillStyle =
-        valid
-            ? tower.color
-            : "#e74c3c";
+        ctx.arc(
+            selectedTower.x,
+            selectedTower.y,
+            selectedTower.range,
+            0,
+            Math.PI * 2
+        );
 
-    ctx.globalAlpha = 0.45;
+        ctx.fillStyle =
+            "rgba(255, 255, 255, 0.05)";
 
-    ctx.fill();
+        ctx.fill();
 
-    ctx.globalAlpha = 1;
+        ctx.strokeStyle =
+            "rgba(255, 255, 255, 0.8)";
 
-    ctx.strokeStyle =
-        valid
-            ? "#fff"
-            : "#ff5555";
+        ctx.lineWidth = 2;
 
-    ctx.lineWidth = 2;
+        ctx.setLineDash([6, 5]);
 
-    ctx.stroke();
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+    }
 }
 
 
@@ -850,10 +1023,6 @@ canvas.addEventListener(
         }
 
 
-        // Käytetään samaa korjattua
-        // koordinaattimuunnosta kuin
-        // kursorissa.
-
         updateMousePosition(event);
 
 
@@ -861,8 +1030,9 @@ canvas.addEventListener(
         const y = mouseY;
 
 
-        // Jos klikataan olemassa olevaa
-        // tornia -> päivitetään sitä
+        // ==================================
+        // ONKO KLIKATTU TORNIA?
+        // ==================================
 
         const clickedTower =
             towers.find(
@@ -878,7 +1048,7 @@ canvas.addEventListener(
                 return Math.sqrt(
                     dx * dx +
                     dy * dy
-                ) < 22;
+                ) < 25;
             }
         );
 
@@ -887,7 +1057,7 @@ canvas.addEventListener(
             clickedTower
         ) {
 
-            upgradeTower(
+            showTowerInfo(
                 clickedTower
             );
 
@@ -895,7 +1065,23 @@ canvas.addEventListener(
         }
 
 
-        // Tarkistetaan rakennuspaikka
+        // Jos klikataan tyhjää
+        // ja torni oli valittuna,
+        // poistetaan valinta.
+
+        if (
+            selectedTower
+        ) {
+
+            deselectTower();
+
+            return;
+        }
+
+
+        // ==================================
+        // RAKENTAMINEN
+        // ==================================
 
         if (
             !isValidTowerPosition(
@@ -929,7 +1115,7 @@ canvas.addEventListener(
 
         // RAKENNETAAN TORNI
 
-        towers.push({
+        const newTower = {
 
             x: x,
 
@@ -946,8 +1132,16 @@ canvas.addEventListener(
 
             cooldown: 0,
 
-            level: 1
-        });
+            level: 1,
+
+            totalSpent:
+                type.cost
+        };
+
+
+        towers.push(
+            newTower
+        );
 
 
         money -=
@@ -971,6 +1165,11 @@ function upgradeTower(
     tower
 ) {
 
+    if (!tower) {
+        return;
+    }
+
+
     const upgradeCost =
         tower.level * 50;
 
@@ -981,6 +1180,8 @@ function upgradeTower(
 
         selectedTowerText.textContent =
             `❌ Päivitys maksaa ${upgradeCost} rahaa`;
+
+        showTowerInfo(tower);
 
         return;
     }
@@ -1002,12 +1203,121 @@ function upgradeTower(
     tower.range += 10;
 
 
+    tower.totalSpent +=
+        upgradeCost;
+
+
     selectedTowerText.textContent =
-        `⬆️ Torni päivitetty tasolle ${tower.level}`;
+        `⬆️ ${towerTypes[tower.type].name} päivitetty tasolle ${tower.level}`;
+
+
+    showTowerInfo(tower);
+
+    updateUI();
+}
+
+
+// ========================================
+// TORNIN MYYNTI
+// ========================================
+
+function getSellValue(
+    tower
+) {
+
+    if (!tower) {
+        return 0;
+    }
+
+
+    return Math.floor(
+        tower.totalSpent * 0.6
+    );
+}
+
+
+function sellTower(
+    tower
+) {
+
+    if (!tower) {
+        return;
+    }
+
+
+    const value =
+        getSellValue(tower);
+
+
+    money +=
+        value;
+
+
+    const index =
+        towers.indexOf(tower);
+
+
+    if (
+        index !== -1
+    ) {
+
+        towers.splice(
+            index,
+            1
+        );
+    }
+
+
+    selectedTower = null;
+
+
+    towerInfoPanel.classList.add(
+        "hidden"
+    );
+
+    buildPanel.classList.remove(
+        "hidden"
+    );
+
+
+    selectedTowerText.textContent =
+        `💰 Torni myyty +${value} rahaa`;
 
 
     updateUI();
 }
+
+
+upgradeTowerButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            selectedTower
+        ) {
+
+            upgradeTower(
+                selectedTower
+            );
+        }
+    }
+);
+
+
+sellTowerButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            selectedTower
+        ) {
+
+            sellTower(
+                selectedTower
+            );
+        }
+    }
+);
 
 
 // ========================================
@@ -1023,6 +1333,36 @@ function drawTowers() {
             towerTypes[
                 tower.type
             ];
+
+
+        // Valitun tornin taustakehä
+
+        if (
+            tower === selectedTower
+        ) {
+
+            ctx.beginPath();
+
+            ctx.arc(
+                tower.x,
+                tower.y,
+                25,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fillStyle =
+                "rgba(255,255,255,0.12)";
+
+            ctx.fill();
+
+            ctx.strokeStyle =
+                "#fff";
+
+            ctx.lineWidth = 2;
+
+            ctx.stroke();
+        }
 
 
         // Torni
@@ -1042,7 +1382,9 @@ function drawTowers() {
         // Torniin liittyvä ympyrä
 
         ctx.strokeStyle =
-            "#222";
+            tower === selectedTower
+                ? "#fff"
+                : "#222";
 
         ctx.lineWidth = 2;
 
@@ -1442,6 +1784,19 @@ function updateUI() {
         "score"
     ).textContent =
         score;
+
+
+    // Päivitetään myös valitun tornin
+    // upgrade-painike jos sellainen on.
+
+    if (
+        selectedTower
+    ) {
+
+        showTowerInfo(
+            selectedTower
+        );
+    }
 }
 
 
@@ -1731,9 +2086,6 @@ function gameLoop() {
         drawBullets();
 
     } else {
-
-        // Näytetään tornit myös
-        // kun peli ei ole käynnissä
 
         drawTowers();
     }

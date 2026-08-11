@@ -2,6 +2,7 @@
     box-sizing: border-box;
 }
 
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -39,6 +40,7 @@ body {
     margin-bottom: 22px;
 }
 
+
 .game-header h1 {
     margin: 0;
 
@@ -47,6 +49,7 @@ body {
 
     letter-spacing: -1px;
 }
+
 
 .game-header p {
     margin: 7px 0 0;
@@ -74,6 +77,7 @@ body {
 .stat {
     display: flex;
     align-items: center;
+
     gap: 12px;
 
     padding: 13px 16px;
@@ -89,9 +93,11 @@ body {
         rgba(0, 0, 0, 0.2);
 }
 
+
 .stat > span {
     font-size: 25px;
 }
+
 
 .stat small {
     display: block;
@@ -100,8 +106,10 @@ body {
 
     font-size: 10px;
     font-weight: 700;
+
     letter-spacing: 1px;
 }
+
 
 .stat strong {
     display: block;
@@ -118,6 +126,7 @@ body {
 
 .game-area {
     display: flex;
+
     flex-direction: column;
 
     gap: 14px;
@@ -177,6 +186,7 @@ body {
     backdrop-filter: blur(4px);
 }
 
+
 .hidden {
     display: none !important;
 }
@@ -207,11 +217,13 @@ body {
     margin-bottom: 8px;
 }
 
+
 .screen-card h2 {
     margin: 5px 0 10px;
 
     font-size: 28px;
 }
+
 
 .screen-card p {
     color: #9ca3af;
@@ -250,6 +262,7 @@ body {
     transition: 0.2s;
 }
 
+
 .main-button:hover {
     transform: translateY(-2px);
 
@@ -275,14 +288,16 @@ body {
 
 
 .panel-header {
-    margin-bottom: 14px;
+    margin-bottom: 15px;
 }
+
 
 .panel-header h2 {
     margin: 0;
 
     font-size: 18px;
 }
+
 
 .panel-header p {
     margin: 5px 0 0;
@@ -292,6 +307,29 @@ body {
     font-size: 13px;
 }
 
+
+.tower-section {
+    margin-bottom: 15px;
+}
+
+
+.section-title {
+    margin-bottom: 10px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+
+/* =========================
+   TOWER LIST
+========================= */
 
 .tower-list {
     display: grid;
@@ -333,6 +371,7 @@ body {
     transition: 0.2s;
 }
 
+
 .tower-card:hover {
     background: #232e3e;
 
@@ -351,11 +390,13 @@ body {
     flex: 1;
 }
 
+
 .tower-info strong {
     display: block;
 
     font-size: 14px;
 }
+
 
 .tower-info span {
     display: block;
@@ -376,18 +417,218 @@ body {
 }
 
 
-/* Tower colors */
-
 .tower-card.basic:hover {
     border-color: #3498db;
 }
+
 
 .tower-card.rapid:hover {
     border-color: #2ecc71;
 }
 
+
 .tower-card.cannon:hover {
     border-color: #e74c3c;
+}
+
+
+/* =========================
+   SELECTED TOWER
+========================= */
+
+.tower-info-panel {
+    padding: 15px;
+
+    background: #1b2432;
+
+    border: 1px solid #344257;
+
+    border-radius: 12px;
+}
+
+
+.selected-tower-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+
+.selected-tower-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    background: #111827;
+
+    border: 1px solid #3a4658;
+
+    border-radius: 10px;
+
+    font-size: 27px;
+}
+
+
+.selected-tower-header h3 {
+    margin: 0;
+
+    font-size: 17px;
+}
+
+
+.selected-tower-header span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #8d99aa;
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   TOWER STATS
+========================= */
+
+.tower-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
+
+
+.tower-stat {
+    padding: 9px;
+
+    text-align: center;
+
+    background: #111827;
+
+    border: 1px solid #293548;
+
+    border-radius: 8px;
+}
+
+
+.tower-stat span {
+    display: block;
+
+    color: #8d99aa;
+
+    font-size: 10px;
+}
+
+
+.tower-stat strong {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 16px;
+}
+
+
+/* =========================
+   TOWER ACTIONS
+========================= */
+
+.tower-action {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 11px 13px;
+
+    margin-top: 8px;
+
+    border: 1px solid #39475b;
+
+    border-radius: 9px;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.tower-action:hover {
+    transform: translateY(-1px);
+}
+
+
+.tower-action.upgrade {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+}
+
+
+.tower-action.upgrade:hover {
+    box-shadow:
+        0 6px 18px
+        rgba(37, 99, 235, 0.3);
+}
+
+
+.tower-action.sell {
+    background: #242d3b;
+
+    color: #cbd5e1;
+}
+
+
+.tower-action.sell:hover {
+    border-color: #f59e0b;
+}
+
+
+.deselect-button {
+    width: 100%;
+
+    margin-top: 9px;
+
+    padding: 8px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #7f8b9d;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+
+.deselect-button:hover {
+    color: #e5e7eb;
 }
 
 
@@ -433,11 +674,13 @@ body {
     margin-bottom: 12px;
 }
 
+
 .leaderboard-title h2 {
     margin: 0;
 
     font-size: 18px;
 }
+
 
 .leaderboard-title span {
     color: #7f8b9d;
@@ -445,8 +688,6 @@ body {
     font-size: 12px;
 }
 
-
-/* TOP 10 rows */
 
 .leaderboard > div:not(.leaderboard-title) {
     padding: 9px 10px;
@@ -458,6 +699,7 @@ body {
 
     font-size: 13px;
 }
+
 
 .leaderboard > div:last-child {
     border-bottom: none;
@@ -478,6 +720,7 @@ body {
     margin: 20px 0;
 }
 
+
 .result div {
     display: flex;
 
@@ -486,11 +729,13 @@ body {
     gap: 4px;
 }
 
+
 .result span {
     color: #8b96a7;
 
     font-size: 12px;
 }
+
 
 .result strong {
     font-size: 25px;
@@ -520,22 +765,31 @@ footer {
 
     .game-wrapper {
         width: 96%;
+
         padding-top: 18px;
     }
+
 
     .game-header h1 {
         font-size: 29px;
     }
+
 
     .stats {
         grid-template-columns:
             repeat(2, 1fr);
     }
 
+
     .tower-list {
         grid-template-columns: 1fr;
     }
 
+
+    .tower-stats {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
 }
 
 
@@ -545,16 +799,38 @@ footer {
         gap: 7px;
     }
 
+
     .stat {
         padding: 10px;
     }
+
 
     .stat > span {
         font-size: 20px;
     }
 
+
     .stat strong {
         font-size: 18px;
     }
 
+
+    .tower-stats {
+        gap: 5px;
+    }
+
+
+    .tower-stat {
+        padding: 7px 4px;
+    }
+
+
+    .tower-stat span {
+        font-size: 9px;
+    }
+
+
+    .tower-stat strong {
+        font-size: 14px;
+    }
 }

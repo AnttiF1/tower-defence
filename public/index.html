@@ -14,7 +14,9 @@
 
     <div class="game-wrapper">
 
-        <!-- Otsikko -->
+        <!-- ================================
+             HEADER
+        ================================= -->
 
         <header class="game-header">
 
@@ -26,36 +28,45 @@
         </header>
 
 
-        <!-- Pelin tilastot -->
+        <!-- ================================
+             STATS
+        ================================= -->
 
         <section class="stats">
 
             <div class="stat lives">
                 <span>❤️</span>
+
                 <div>
                     <small>ELÄMÄT</small>
                     <strong id="lives">10</strong>
                 </div>
             </div>
 
+
             <div class="stat money">
                 <span>💰</span>
+
                 <div>
                     <small>RAHA</small>
                     <strong id="money">100</strong>
                 </div>
             </div>
 
+
             <div class="stat wave">
                 <span>🌊</span>
+
                 <div>
                     <small>AALTO</small>
                     <strong id="wave">1</strong>
                 </div>
             </div>
 
+
             <div class="stat score">
                 <span>🏆</span>
+
                 <div>
                     <small>PISTEET</small>
                     <strong id="score">0</strong>
@@ -65,7 +76,9 @@
         </section>
 
 
-        <!-- Peli -->
+        <!-- ================================
+             GAME
+        ================================= -->
 
         <main class="game-area">
 
@@ -78,7 +91,9 @@
                 </canvas>
 
 
-                <!-- Aloitusruutu -->
+                <!-- ============================
+                     START SCREEN
+                ============================= -->
 
                 <div
                     id="startScreen"
@@ -108,7 +123,9 @@
                 </div>
 
 
-                <!-- Game Over -->
+                <!-- ============================
+                     GAME OVER
+                ============================= -->
 
                 <div
                     id="gameOverScreen"
@@ -126,6 +143,7 @@
 
                             <div>
                                 <span>Pisteet</span>
+
                                 <strong id="finalScore">
                                     0
                                 </strong>
@@ -133,6 +151,7 @@
 
                             <div>
                                 <span>Aalto</span>
+
                                 <strong id="finalWave">
                                     1
                                 </strong>
@@ -153,14 +172,16 @@
             </div>
 
 
-            <!-- Tornivalikko -->
+            <!-- ================================
+                 TOWER PANEL
+            ================================= -->
 
             <section class="tower-panel">
 
                 <div class="panel-header">
 
                     <div>
-                        <h2>🏰 Rakenna torni</h2>
+                        <h2>🏰 Tornit</h2>
 
                         <p id="selectedTower">
                             Valitse torni
@@ -170,101 +191,231 @@
                 </div>
 
 
-                <div class="tower-list">
+                <!-- ============================
+                     TOWER BUILDING
+                ============================= -->
+
+                <div
+                    id="buildPanel"
+                    class="tower-section">
+
+                    <div class="section-title">
+                        <span>🔨 Rakenna uusi torni</span>
+                    </div>
 
 
-                    <!-- Basic -->
+                    <div class="tower-list">
 
-                    <button
-                        id="basicTowerButton"
-                        class="tower-card basic">
+                        <!-- BASIC -->
 
-                        <div class="tower-icon">
+                        <button
+                            id="basicTowerButton"
+                            class="tower-card basic">
+
+                            <div class="tower-icon">
+                                🟦
+                            </div>
+
+                            <div class="tower-info">
+
+                                <strong>
+                                    Basic Tower
+                                </strong>
+
+                                <span>
+                                    Tasapainoinen torni
+                                </span>
+
+                            </div>
+
+                            <div class="tower-cost">
+                                💰 25
+                            </div>
+
+                        </button>
+
+
+                        <!-- RAPID -->
+
+                        <button
+                            id="rapidTowerButton"
+                            class="tower-card rapid">
+
+                            <div class="tower-icon">
+                                🟩
+                            </div>
+
+                            <div class="tower-info">
+
+                                <strong>
+                                    Rapid Tower
+                                </strong>
+
+                                <span>
+                                    Nopea tulitus
+                                </span>
+
+                            </div>
+
+                            <div class="tower-cost">
+                                💰 50
+                            </div>
+
+                        </button>
+
+
+                        <!-- CANNON -->
+
+                        <button
+                            id="cannonTowerButton"
+                            class="tower-card cannon">
+
+                            <div class="tower-icon">
+                                🟥
+                            </div>
+
+                            <div class="tower-info">
+
+                                <strong>
+                                    Cannon Tower
+                                </strong>
+
+                                <span>
+                                    Suuri aluevahinko
+                                </span>
+
+                            </div>
+
+                            <div class="tower-cost">
+                                💰 75
+                            </div>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ============================
+                     SELECTED TOWER
+                ============================= -->
+
+                <div
+                    id="towerInfoPanel"
+                    class="tower-info-panel hidden">
+
+                    <div class="selected-tower-header">
+
+                        <div
+                            id="selectedTowerIcon"
+                            class="selected-tower-icon">
                             🟦
                         </div>
 
-                        <div class="tower-info">
+                        <div>
 
-                            <strong>
+                            <h3 id="selectedTowerName">
                                 Basic Tower
-                            </strong>
+                            </h3>
 
-                            <span>
-                                Tasapainoinen torni
+                            <span id="selectedTowerLevel">
+                                Taso 1
                             </span>
 
                         </div>
 
-                        <div class="tower-cost">
-                            💰 25
+                    </div>
+
+
+                    <!-- STATS -->
+
+                    <div class="tower-stats">
+
+                        <div class="tower-stat">
+
+                            <span>⚔️ Damage</span>
+
+                            <strong id="towerDamage">
+                                25
+                            </strong>
+
                         </div>
 
-                    </button>
+
+                        <div class="tower-stat">
+
+                            <span>🎯 Kantama</span>
+
+                            <strong id="towerRange">
+                                145
+                            </strong>
+
+                        </div>
 
 
-                    <!-- Rapid -->
+                        <div class="tower-stat">
+
+                            <span>⏱️ Tulitus</span>
+
+                            <strong id="towerCooldown">
+                                55
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- UPGRADE -->
 
                     <button
-                        id="rapidTowerButton"
-                        class="tower-card rapid">
+                        id="upgradeTowerButton"
+                        class="tower-action upgrade">
 
-                        <div class="tower-icon">
-                            🟩
-                        </div>
+                        <span>
+                            ⬆️ Päivitä torni
+                        </span>
 
-                        <div class="tower-info">
-
-                            <strong>
-                                Rapid Tower
-                            </strong>
-
-                            <span>
-                                Nopea tulitus
-                            </span>
-
-                        </div>
-
-                        <div class="tower-cost">
+                        <strong id="upgradeCost">
                             💰 50
-                        </div>
+                        </strong>
 
                     </button>
 
 
-                    <!-- Cannon -->
+                    <!-- SELL -->
 
                     <button
-                        id="cannonTowerButton"
-                        class="tower-card cannon">
+                        id="sellTowerButton"
+                        class="tower-action sell">
 
-                        <div class="tower-icon">
-                            🟥
-                        </div>
+                        <span>
+                            💰 Myy torni
+                        </span>
 
-                        <div class="tower-info">
+                        <strong id="sellValue">
+                            +15
+                        </strong>
 
-                            <strong>
-                                Cannon Tower
-                            </strong>
+                    </button>
 
-                            <span>
-                                Suuri aluevahinko
-                            </span>
 
-                        </div>
+                    <button
+                        id="deselectTowerButton"
+                        class="deselect-button">
 
-                        <div class="tower-cost">
-                            💰 75
-                        </div>
+                        ❌ Sulje valinta
 
                     </button>
 
                 </div>
 
+
                 <div class="hint">
-                    💡 Valitse torni ja klikkaa
-                    kartalta rakennuspaikkaa.
-                    Klikkaa tornia päivittääksesi sen.
+                    💡 Valitse torni ja klikkaa kartalta
+                    rakennuspaikkaa. Klikkaa rakennettua
+                    tornia nähdäksesi sen tiedot.
                 </div>
 
             </section>
@@ -272,15 +423,22 @@
         </main>
 
 
-        <!-- TOP 10 -->
+        <!-- ================================
+             LEADERBOARD
+        ================================= -->
 
         <section
             id="leaderboard"
             class="leaderboard">
 
             <div class="leaderboard-title">
+
                 <h2>🏆 TOP 10</h2>
-                <span>Parhaat pelaajat</span>
+
+                <span>
+                    Parhaat pelaajat
+                </span>
+
             </div>
 
         </section>
