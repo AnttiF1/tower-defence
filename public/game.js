@@ -892,7 +892,7 @@ function createEnemy() {
     if (type === "boss") {
 
         healthMultiplier =
-            1 + (wave - 5) * 0.35;
+            1 + (wave - 5) * 0.40;
 
         speedBonus =
             (wave - 5) * 0.012;
