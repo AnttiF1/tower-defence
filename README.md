@@ -1,91 +1,270 @@
-🏰 Tower Defense
+# 🏰 Tower Defense
 
-Selainpohjainen Tower Defense -peli, jossa pelaaja rakentaa torneja ja puolustautuu vihollisaaltoja vastaan. Projektissa on toteutettu pelin keskeinen logiikka sekä AWS-pohjainen backend pisteiden ja Top-listan käsittelyä varten.
+Selainpohjainen Tower Defense -peli, jossa pelaaja rakentaa ja päivittää torneja puolustaakseen tukikohtaa vihollisaalloilta.
 
-🎮 Ominaisuudet
+## 🎮 Pelin tavoite
 
-Tower Defense -pelimekaniikka
+Tavoitteena on selviytyä mahdollisimman monesta vihollisaallosta, kerätä rahaa ja pisteitä sekä päästä TOP 10 -listalle.
 
-Vihollisten liikkuminen ja vihollisaallot
+## ✨ Ominaisuudet
 
-Tornien rakentaminen
+- 🏰 3 erilaista tornia
+- ⬆️ Tornien päivittäminen
+- 💰 Tornien ostaminen ja myyminen
+- 🎯 3 erilaista targetointitapaa
+- 👾 4 erilaista vihollista
+- 👑 Boss-viholliset
+- 🌊 Kasvava vaikeustaso
+- ❤️ Tukikohdan elämäpisteet
+- 💰 Rahajärjestelmä
+- 🏆 Pistejärjestelmä
+- 🥇 TOP 10 -leaderboard
+- ☁️ AWS Lambda + API Gateway
+- ✨ Partikkeliefektit
+- 🎯 Tornien kantaman näyttäminen
+- 📊 Reaaliaikainen pelitilanne
 
-Tornien hyökkäysmekaniikka
+## 🕹️ Pelaaminen
 
-Pisteiden käsittely
+### Tornien rakentaminen
 
-Top-lista / leaderboard
+Valitse torni ja klikkaa kartalta sopivaa paikkaa.
 
-REST API -rajapinta
+Torneja ei voi rakentaa:
 
-AWS Lambda -backend
+- Reitin päälle
+- Tukikohdan päälle
+- Liian lähelle toista tornia
+- Kartan ulkopuolelle
 
-AWS API Gateway
+### Tornit
 
-Selainpohjainen käyttöliittymä
+#### 🟦 Basic Tower
 
-🛠️ Teknologiat
+Tasapainoinen perustorni.
 
-JavaScript
+- Edullinen
+- Hyvä vahinko
+- Hyvä kantama
+- Keskinopea hyökkäys
 
-HTML
+#### 🟩 Rapid Tower
 
-CSS
+Nopeasti ampuva torni.
 
-AWS Lambda
+- Nopea hyökkäys
+- Pienempi vahinko
+- Sopii tavallisia vihollisia vastaan
 
-AWS API Gateway
+#### 🟥 Cannon Tower
 
-REST API
+Raskas tykki.
 
-☁️ AWS-arkkitehtuuri
+- Suuri vahinko
+- Pitkä kantama
+- Hidas hyökkäys
+- Aluevaurio
+
+## 🎯 Targetointi
+
+Torneille voidaan valita kolme eri targetointitapaa:
+
+### First
+
+Tähtää pisimmälle reitillä edenneeseen viholliseen.
+
+### Last
+
+Tähtää vähiten reitillä edenneeseen viholliseen.
+
+### Strongest
+
+Tähtää viholliseen, jolla on eniten HP:tä.
+
+## 👾 Viholliset
+
+| Vihollinen | Nopeus | HP | Palkkio |
+|---|---:|---:|---:|
+| 🔴 Normal | 1.25 | 100 | 10 |
+| 🟡 Fast | 2.1 | 65 | 15 |
+| 🟣 Tank | 0.75 | 450 | 30 |
+| 👑 Boss | 0.55 | 2200 | 150 |
+
+Vihollisten HP ja vaikeus kasvavat aaltojen mukana.
+
+## 👑 Bossit
+
+Boss ilmestyy joka viidennellä aallolla.
+
+Bossilla on:
+
+- Paljon HP:tä
+- Suuri koko
+- Erityinen aura
+- Kruunu
+- Oma HP-palkki
+- Suuri rahapalkkio
+- Erikoisefektit
+
+Bossien vaikeus kasvaa myöhemmissä aalloissa.
+
+## 🌊 Aallot
+
+Jokainen aalto sisältää enemmän vihollisia.
+
+Aaltojen mukana:
+
+- Vihollisten HP kasvaa
+- Vihollisten nopeus kasvaa
+- Vihollisten määrä kasvaa
+- Uusia vihollistyyppejä ilmestyy
+- Bossit tulevat mukaan peliin
+
+Kun aalto suoritetaan, pelaaja saa rahabonuksen.
+
+## ⬆️ Tornien päivittäminen
+
+Valitse rakennettu torni klikkaamalla sitä.
+
+Päivitys:
+
+- Lisää vahinkoa
+- Lisää kantamaa
+- Nostaa tornin tasoa
+- Maksaa rahaa
+
+Päivitysten hinta kasvaa tornin tason mukaan.
+
+## 💰 Tornien myyminen
+
+Tornin voi myydä milloin tahansa.
+
+Myynnistä saa takaisin osan torniin käytetystä rahasta.
+
+## ❤️ Tukikohta
+
+Pelaajalla on alussa:
+
+**10 ❤️**
+
+Jos vihollinen pääsee reitin loppuun, pelaaja menettää yhden elämäpisteen.
+
+Kun elämäpisteet saavuttavat nollan, peli päättyy.
+
+## 🏆 Pisteet
+
+Pisteitä saa:
+
+- Vihollisten tuhoamisesta
+- Bossien tuhoamisesta
+- Aaltojen suorittamisesta
+
+Game Over -tilanteessa pelaaja voi syöttää nimensä ja tallentaa pisteensä TOP 10 -listalle.
+
+## ☁️ AWS Leaderboard
+
+Leaderboard käyttää AWS Lambdaa ja API Gatewayta.
+
+Arkkitehtuuri:
 
 Selain
-   │
-   ▼
+↓
 API Gateway
-   │
-   ▼
+↓
 AWS Lambda
-   │
-   ▼
-REST API / backend-logiikka
+↓
+Leaderboard / tietokanta
 
-API Gateway vastaanottaa HTTP-pyynnöt ja välittää ne Lambda-funktiolle, joka käsittelee backend-logiikan.
+### GET /scores
 
-🚀 Käynnistys
+Hakee TOP 10 -tulokset.
 
-1. Kloonaa repository
+### POST /scores
 
-git clone https://github.com/AnttiF1/tower-defence.git
-cd tower-defence
+Tallentaa uuden tuloksen.
 
-2. Avaa projekti
+Esimerkkidata:
 
-Avaa peli selaimessa projektin HTML-tiedoston kautta tai käytä projektissa määriteltyä paikallista kehityspalvelinta.
+```json
+{
+  "playerName": "Pelaaja",
+  "score": 1000,
+  "wave": 10
+}
 
-🎯 Projektin tavoite
+🛠️ Teknologiat
+HTML5
+CSS3
+JavaScript
+HTML Canvas API
+Fetch API
+AWS Lambda
+AWS API Gateway
+📁 Projektin rakenne
+tower-defense/
+│
+├── index.html
+├── style.css
+├── game.js
+└── README.md
+🧠 Tekninen toteutus
 
-Projektin tavoitteena oli rakentaa toimiva selainpohjainen Tower Defense -peli ja samalla harjoitella käytännön ohjelmistokehitystä.
+Peli käyttää HTML5 Canvasia pelimaailman piirtämiseen.
 
-Projektissa on harjoiteltu erityisesti:
+Game Loop päivittää:
 
-JavaScript-ohjelmointia
+Aallot
+Viholliset
+Tornit
+Luodit
+Efektit
+Floating Text -tekstit
 
-pelilogiikan suunnittelua
+Tämän jälkeen Canvas piirtää pelin uuden tilanteen.
 
-käyttöliittymän toteuttamista
+🎯 Tornien targetointi
 
-tapahtumankäsittelyä
+Tornit etsivät kantamansa sisällä olevat viholliset.
 
-REST-rajapintojen käyttöä
+Targetointi perustuu vihollisen etenemiseen ja HP-määrään.
 
-AWS Lambda -funktioita
+Tornit voivat valita esimerkiksi pisimmälle edenneen tai vahvimman vihollisen.
 
-API Gatewayn käyttöä
+💥 Efektit
 
-frontendin ja backendin välistä tiedonsiirtoa
+Pelissä on erilaisia visuaalisia efektejä:
 
-📊 Leaderboard
+Tornin rakentaminen
+Tornin päivittäminen
+Osumat
+Vihollisen kuolema
+Räjähdykset
+Bossin kuolema
+Floating Text -ilmoitukset
+⚖️ Pelin tasapainotus
 
-Pelin pisteitä käsitellään backendin kautta ja pelaajien tuloksia voidaan hyödyntää Top-listassa.
+Pelissä on tasapainotettu:
+
+Tornien hinnat
+Tornien vahingot
+Tornien hyökkäysnopeudet
+Tornien kantamat
+Vihollisten HP
+Vihollisten nopeudet
+Rahapalkkiot
+Päivitysten hinnat
+Aaltojen vaikeutuminen
+
+Tavoitteena on tehdä pelistä haastava mutta pelattava.
+
+🚀 Käynnistäminen
+
+Lataa projekti:
+
+git clone <repository-url>
+
+Siirry projektikansioon:
+
+cd tower-defense
+
+Avaa projekti esimerkiksi Visual Studio Codessa ja käynnistä index.html Live Serverillä.
