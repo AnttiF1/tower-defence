@@ -123,12 +123,14 @@ const deselectTowerButton =
 // ========================================
 
 function showElement(element) {
+
     if (element) {
         element.classList.remove("hidden");
     }
 }
 
 function hideElement(element) {
+
     if (element) {
         element.classList.add("hidden");
     }
@@ -136,19 +138,25 @@ function hideElement(element) {
 
 // ========================================
 // TORNITYYPIT
+// TASAPAINOTETTU
 // ========================================
 
 const towerTypes = {
 
     basic: {
+
         name: "Basic Tower",
+
         color: "#3498db",
+
         icon: "🟦",
 
         cost: 25,
 
-        damage: 25,
+        damage: 27,
+
         range: 145,
+
         cooldown: 55,
 
         bulletSpeed: 7,
@@ -157,15 +165,20 @@ const towerTypes = {
     },
 
     rapid: {
+
         name: "Rapid Tower",
+
         color: "#2ecc71",
+
         icon: "🟩",
 
         cost: 50,
 
-        damage: 12,
+        damage: 11,
+
         range: 130,
-        cooldown: 20,
+
+        cooldown: 21,
 
         bulletSpeed: 9,
 
@@ -173,14 +186,19 @@ const towerTypes = {
     },
 
     cannon: {
+
         name: "Cannon Tower",
+
         color: "#e74c3c",
+
         icon: "🟥",
 
         cost: 75,
 
-        damage: 80,
+        damage: 78,
+
         range: 180,
+
         cooldown: 100,
 
         bulletSpeed: 5,
@@ -196,10 +214,13 @@ const towerTypes = {
 const enemyTypes = {
 
     normal: {
+
         name: "Normal",
+
         color: "#e74c3c",
 
         speed: 1.25,
+
         health: 100,
 
         reward: 10,
@@ -208,10 +229,13 @@ const enemyTypes = {
     },
 
     fast: {
+
         name: "Fast",
+
         color: "#f1c40f",
 
         speed: 2.1,
+
         health: 65,
 
         reward: 15,
@@ -220,10 +244,13 @@ const enemyTypes = {
     },
 
     tank: {
+
         name: "Tank",
+
         color: "#8e44ad",
 
         speed: 0.75,
+
         health: 450,
 
         reward: 30,
@@ -232,10 +259,13 @@ const enemyTypes = {
     },
 
     boss: {
+
         name: "BOSS",
+
         color: "#111111",
 
         speed: 0.55,
+
         health: 2200,
 
         reward: 150,
@@ -250,23 +280,50 @@ const enemyTypes = {
 
 const path = [
 
-    { x: -30, y: 250 },
+    {
+        x: -30,
+        y: 250
+    },
 
-    { x: 130, y: 250 },
+    {
+        x: 130,
+        y: 250
+    },
 
-    { x: 130, y: 100 },
+    {
+        x: 130,
+        y: 100
+    },
 
-    { x: 330, y: 100 },
+    {
+        x: 330,
+        y: 100
+    },
 
-    { x: 330, y: 400 },
+    {
+        x: 330,
+        y: 400
+    },
 
-    { x: 530, y: 400 },
+    {
+        x: 530,
+        y: 400
+    },
 
-    { x: 530, y: 170 },
+    {
+        x: 530,
+        y: 170
+    },
 
-    { x: 740, y: 170 },
+    {
+        x: 740,
+        y: 170
+    },
 
-    { x: 810, y: 170 }
+    {
+        x: 810,
+        y: 170
+    }
 ];
 
 // ========================================
@@ -280,6 +337,7 @@ function selectTower(type) {
     selectedTower = null;
 
     hideElement(towerInfoPanel);
+
     showElement(buildPanel);
 
     const tower =
@@ -345,6 +403,7 @@ function showTowerInfo(tower) {
         towerTypes[tower.type];
 
     hideElement(buildPanel);
+
     showElement(towerInfoPanel);
 
     if (selectedTowerText) {
@@ -432,13 +491,15 @@ function updateTargetingUI() {
             "[data-targeting]"
         );
 
-    possibleButtons.forEach(button => {
+    possibleButtons.forEach(
+        button => {
 
-        button.classList.toggle(
-            "active",
-            button.dataset.targeting === mode
-        );
-    });
+            button.classList.toggle(
+                "active",
+                button.dataset.targeting === mode
+            );
+        }
+    );
 }
 
 // ========================================
@@ -450,6 +511,7 @@ function deselectTower() {
     selectedTower = null;
 
     hideElement(towerInfoPanel);
+
     showElement(buildPanel);
 
     if (selectedTowerText) {
@@ -529,7 +591,11 @@ function drawMap() {
         ctx.beginPath();
 
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+
+        ctx.lineTo(
+            x,
+            canvas.height
+        );
 
         ctx.stroke();
     }
@@ -543,7 +609,11 @@ function drawMap() {
         ctx.beginPath();
 
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+
+        ctx.lineTo(
+            canvas.width,
+            y
+        );
 
         ctx.stroke();
     }
@@ -551,9 +621,11 @@ function drawMap() {
     // Reitti
 
     ctx.strokeStyle = "#9b7b4d";
+
     ctx.lineWidth = 64;
 
     ctx.lineCap = "round";
+
     ctx.lineJoin = "round";
 
     ctx.beginPath();
@@ -580,6 +652,7 @@ function drawMap() {
     // Reitin vaaleampi sisus
 
     ctx.strokeStyle = "#c2a36b";
+
     ctx.lineWidth = 52;
 
     ctx.beginPath();
@@ -615,6 +688,7 @@ function drawMap() {
     );
 
     ctx.strokeStyle = "#ffffff";
+
     ctx.lineWidth = 3;
 
     ctx.strokeRect(
@@ -748,7 +822,7 @@ function drawMap() {
 }
 
 // ========================================
-// VIHOLLISTEN LUONTI
+// VIHOLLISEN TYYPPI
 // ========================================
 
 function getEnemyTypeForWave() {
@@ -766,13 +840,17 @@ function getEnemyTypeForWave() {
     const random =
         Math.random();
 
+    // Tankit alkavat aallosta 4
+
     if (
         wave >= 4 &&
-        random < 0.20
+        random < 0.18
     ) {
 
         return "tank";
     }
+
+    // Fast alkaa aallosta 2
 
     if (
         wave >= 2 &&
@@ -785,6 +863,10 @@ function getEnemyTypeForWave() {
     return "normal";
 }
 
+// ========================================
+// VIHOLLISEN LUONTI
+// ========================================
+
 function createEnemy() {
 
     const type =
@@ -793,21 +875,27 @@ function createEnemy() {
     const template =
         enemyTypes[type];
 
+    // TASAPAINOTUS:
+    // HP kasvaa 15 % / aalto
+    // aikaisemman 18 % sijaan.
+
     let healthMultiplier =
-        1 + (wave - 1) * 0.18;
+        1 + (wave - 1) * 0.15;
+
+    // Nopeus kasvaa hitaasti.
 
     let speedBonus =
-        (wave - 1) * 0.025;
+        (wave - 1) * 0.022;
 
-    // Boss skaalautuu nopeammin
+    // Bossit
 
     if (type === "boss") {
 
         healthMultiplier =
-            1 + (wave - 5) * 0.30;
+            1 + (wave - 5) * 0.25;
 
         speedBonus =
-            (wave - 5) * 0.015;
+            (wave - 5) * 0.012;
     }
 
     const health =
@@ -822,9 +910,11 @@ function createEnemy() {
 
     const enemy = {
 
-        x: path[0].x,
+        x:
+            path[0].x,
 
-        y: path[0].y,
+        y:
+            path[0].y,
 
         pathIndex: 0,
 
@@ -845,7 +935,10 @@ function createEnemy() {
         reward:
             Math.round(
                 template.reward *
-                (1 + (wave - 1) * 0.08)
+                (
+                    1 +
+                    (wave - 1) * 0.07
+                )
             ),
 
         dead: false,
@@ -886,7 +979,10 @@ function updateEnemies() {
         const enemy =
             enemies[i];
 
-        if (enemy.hitFlash > 0) {
+        if (
+            enemy.hitFlash > 0
+        ) {
+
             enemy.hitFlash--;
         }
 
@@ -936,6 +1032,12 @@ function updateEnemies() {
                 dy * dy
             );
 
+        const segmentLength =
+            distanceBetweenPoints(
+                path[enemy.pathIndex],
+                nextPoint
+            );
+
         if (
             distance <=
             enemy.speed
@@ -949,6 +1051,9 @@ function updateEnemies() {
 
             enemy.pathIndex++;
 
+            enemy.progress =
+                enemy.pathIndex;
+
         } else {
 
             enemy.x +=
@@ -958,28 +1063,18 @@ function updateEnemies() {
             enemy.y +=
                 (dy / distance) *
                 enemy.speed;
+
+            enemy.progress =
+                enemy.pathIndex +
+                (
+                    1 -
+                    distance /
+                    Math.max(
+                        1,
+                        segmentLength
+                    )
+                );
         }
-
-        // Tarkempi progress targetointia varten
-
-        enemy.progress =
-            enemy.pathIndex +
-            (
-                enemy.pathIndex <
-                path.length - 1
-                    ? 1 -
-                      distance /
-                      Math.max(
-                          1,
-                          distanceBetweenPoints(
-                              path[
-                                  enemy.pathIndex
-                              ],
-                              nextPoint
-                          )
-                      )
-                    : 0
-            );
     }
 }
 
@@ -989,169 +1084,171 @@ function updateEnemies() {
 
 function drawEnemies() {
 
-    enemies.forEach(enemy => {
+    enemies.forEach(
+        enemy => {
 
-        const type =
-            enemyTypes[enemy.type];
+            const type =
+                enemyTypes[enemy.type];
 
-        // Boss aura
+            // Boss aura
 
-        if (
-            enemy.type === "boss"
-        ) {
+            if (
+                enemy.type === "boss"
+            ) {
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    enemy.x,
+                    enemy.y,
+                    enemy.size + 9,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    "rgba(255,0,0,0.12)";
+
+                ctx.fill();
+
+                ctx.strokeStyle =
+                    "rgba(255,204,0,0.8)";
+
+                ctx.lineWidth = 2;
+
+                ctx.stroke();
+            }
+
+            // Hit flash
+
+            ctx.fillStyle =
+                enemy.hitFlash > 0
+                    ? "#ffffff"
+                    : type.color;
 
             ctx.beginPath();
 
             ctx.arc(
                 enemy.x,
                 enemy.y,
-                enemy.size + 9,
+                enemy.size,
                 0,
                 Math.PI * 2
             );
 
-            ctx.fillStyle =
-                "rgba(255,0,0,0.12)";
-
             ctx.fill();
 
             ctx.strokeStyle =
-                "rgba(255,204,0,0.8)";
+                enemy.type === "boss"
+                    ? "#ffcc00"
+                    : "#222";
 
-            ctx.lineWidth = 2;
+            ctx.lineWidth =
+                enemy.type === "boss"
+                    ? 4
+                    : 2;
 
             ctx.stroke();
-        }
 
-        // Hit flash
+            // Boss kruunu
 
-        ctx.fillStyle =
-            enemy.hitFlash > 0
-                ? "#ffffff"
-                : type.color;
+            if (
+                enemy.type === "boss"
+            ) {
 
-        ctx.beginPath();
+                ctx.font =
+                    "20px Arial";
 
-        ctx.arc(
-            enemy.x,
-            enemy.y,
-            enemy.size,
-            0,
-            Math.PI * 2
-        );
+                ctx.textAlign =
+                    "center";
 
-        ctx.fill();
+                ctx.fillText(
+                    "👑",
+                    enemy.x,
+                    enemy.y -
+                        enemy.size -
+                        5
+                );
 
-        ctx.strokeStyle =
-            enemy.type === "boss"
-                ? "#ffcc00"
-                : "#222";
+                ctx.textAlign =
+                    "left";
+            }
 
-        ctx.lineWidth =
-            enemy.type === "boss"
-                ? 4
-                : 2;
+            // HP-palkki
 
-        ctx.stroke();
+            const barWidth =
+                enemy.type === "boss"
+                    ? 80
+                    : 50;
 
-        // Boss kruunu
-
-        if (
-            enemy.type === "boss"
-        ) {
-
-            ctx.font =
-                "20px Arial";
-
-            ctx.textAlign =
-                "center";
-
-            ctx.fillText(
-                "👑",
-                enemy.x,
-                enemy.y -
-                enemy.size -
-                5
-            );
-
-            ctx.textAlign =
-                "left";
-        }
-
-        // HP-palkki
-
-        const barWidth =
-            enemy.type === "boss"
-                ? 80
-                : 50;
-
-        const barHeight =
-            enemy.type === "boss"
-                ? 8
-                : 6;
-
-        ctx.fillStyle =
-            "#222";
-
-        ctx.fillRect(
-            enemy.x -
-                barWidth / 2,
-            enemy.y -
-                enemy.size -
-                13,
-            barWidth,
-            barHeight
-        );
-
-        const hp =
-            Math.max(
-                0,
-                enemy.health /
-                enemy.maxHealth
-            );
-
-        ctx.fillStyle =
-            enemy.type === "boss"
-                ? "#ff3333"
-                : "#2ecc71";
-
-        ctx.fillRect(
-            enemy.x -
-                barWidth / 2,
-            enemy.y -
-                enemy.size -
-                13,
-            barWidth * hp,
-            barHeight
-        );
-
-        // Boss HP-teksti
-
-        if (
-            enemy.type === "boss"
-        ) {
+            const barHeight =
+                enemy.type === "boss"
+                    ? 8
+                    : 6;
 
             ctx.fillStyle =
-                "#ffffff";
+                "#222";
 
-            ctx.font =
-                "bold 10px Arial";
-
-            ctx.textAlign =
-                "center";
-
-            ctx.fillText(
-                `${Math.ceil(enemy.health)} HP`,
-                enemy.x,
-                enemy.y +
-                enemy.size +
-                15
+            ctx.fillRect(
+                enemy.x -
+                    barWidth / 2,
+                enemy.y -
+                    enemy.size -
+                    13,
+                barWidth,
+                barHeight
             );
 
-            ctx.textAlign =
-                "left";
+            const hp =
+                Math.max(
+                    0,
+                    enemy.health /
+                    enemy.maxHealth
+                );
+
+            ctx.fillStyle =
+                enemy.type === "boss"
+                    ? "#ff3333"
+                    : "#2ecc71";
+
+            ctx.fillRect(
+                enemy.x -
+                    barWidth / 2,
+                enemy.y -
+                    enemy.size -
+                    13,
+                barWidth * hp,
+                barHeight
+            );
+
+            // Boss HP-teksti
+
+            if (
+                enemy.type === "boss"
+            ) {
+
+                ctx.fillStyle =
+                    "#ffffff";
+
+                ctx.font =
+                    "bold 10px Arial";
+
+                ctx.textAlign =
+                    "center";
+
+                ctx.fillText(
+                    `${Math.ceil(enemy.health)} HP`,
+                    enemy.x,
+                    enemy.y +
+                        enemy.size +
+                        15
+                );
+
+                ctx.textAlign =
+                    "left";
+            }
         }
-    });
+    );
 }
 
 // ========================================
@@ -1167,6 +1264,8 @@ function getEnemiesForWave() {
 }
 
 function getWaveBonus() {
+
+    // Maltillinen wave bonus
 
     return (
         20 +
@@ -1191,8 +1290,8 @@ function updateWave() {
 
             spawnTimer =
                 Math.max(
-                    22,
-                    70 -
+                    24,
+                    72 -
                     wave * 2
                 );
         }
@@ -1400,8 +1499,11 @@ canvas.addEventListener(
 
         updateMousePosition(event);
 
-        const x = mouseX;
-        const y = mouseY;
+        const x =
+            mouseX;
+
+        const y =
+            mouseY;
 
         // Klikattiinko tornia?
 
@@ -1440,7 +1542,7 @@ canvas.addEventListener(
             return;
         }
 
-        // Rakentaminen
+        // Rakennuspaikan tarkistus
 
         if (
             !isValidTowerPosition(
@@ -1465,6 +1567,8 @@ canvas.addEventListener(
                 selectedTowerType
             ];
 
+        // Rahat
+
         if (
             money <
             type.cost
@@ -1478,6 +1582,8 @@ canvas.addEventListener(
 
             return;
         }
+
+        // Uusi torni
 
         const newTower = {
 
@@ -1534,9 +1640,14 @@ canvas.addEventListener(
 
 function getUpgradeCost(tower) {
 
-    return (
+    // Alussa halpa,
+    // myöhemmin selvästi kalliimpi.
+
+    return Math.floor(
+        tower.level * 50 +
         tower.level *
-        50
+        tower.level *
+        10
     );
 }
 
@@ -1567,28 +1678,23 @@ function upgradeTower(tower) {
 
     tower.level++;
 
+    // +25 % damagea
+
     tower.damage +=
-        Math.round(
-            tower.damage * 0.35
+        Math.max(
+            1,
+            Math.round(
+                tower.damage *
+                0.25
+            )
         );
 
-    tower.range += 10;
+    // +8 rangea
+
+    tower.range += 8;
 
     tower.totalSpent +=
         cost;
-
-    // Pieni cooldown-parannus
-
-    const type =
-        towerTypes[tower.type];
-
-    if (
-        tower.level % 2 === 0 &&
-        type.cooldown > 10
-    ) {
-
-        tower.cooldown = 0;
-    }
 
     createEffect(
         tower.x,
@@ -1596,13 +1702,18 @@ function upgradeTower(tower) {
         "upgrade"
     );
 
+    const type =
+        towerTypes[tower.type];
+
     if (selectedTowerText) {
 
         selectedTowerText.textContent =
             `⬆️ ${type.name} päivitetty tasolle ${tower.level}`;
     }
 
-    showTowerInfo(tower);
+    showTowerInfo(
+        tower
+    );
 
     updateUI();
 }
@@ -1717,7 +1828,9 @@ function setTargeting(mode) {
     }
 
     if (
-        !targetingModes.includes(mode)
+        !targetingModes.includes(
+            mode
+        )
     ) {
 
         return;
@@ -1731,7 +1844,9 @@ function setTargeting(mode) {
     if (selectedTowerText) {
 
         selectedTowerText.textContent =
-            `🎯 Targetointi: ${targetingNames[mode]}`;
+            `🎯 Targetointi: ${
+                targetingNames[mode]
+            }`;
     }
 }
 
@@ -1739,18 +1854,20 @@ document
     .querySelectorAll(
         "[data-targeting]"
     )
-    .forEach(button => {
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                setTargeting(
-                    button.dataset.targeting
-                );
-            }
-        );
-    });
+                    setTargeting(
+                        button.dataset.targeting
+                    );
+                }
+            );
+        }
+    );
 
 // ========================================
 // TORNIT
@@ -1758,151 +1875,157 @@ document
 
 function drawTowers() {
 
-    towers.forEach(tower => {
+    towers.forEach(
+        tower => {
 
-        const type =
-            towerTypes[
-                tower.type
-            ];
+            const type =
+                towerTypes[
+                    tower.type
+                ];
 
-        // Valinnan aura
+            // Valinnan aura
 
-        if (
-            tower ===
-            selectedTower
-        ) {
+            if (
+                tower ===
+                selectedTower
+            ) {
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    tower.x,
+                    tower.y,
+                    27,
+                    0,
+                    Math.PI * 2
+                );
+
+                ctx.fillStyle =
+                    "rgba(255,255,255,0.12)";
+
+                ctx.fill();
+
+                ctx.strokeStyle =
+                    "#ffffff";
+
+                ctx.lineWidth = 2;
+
+                ctx.stroke();
+            }
+
+            // Torni
+
+            ctx.fillStyle =
+                type.color;
+
+            ctx.fillRect(
+                tower.x - 17,
+                tower.y - 17,
+                34,
+                34
+            );
+
+            ctx.strokeStyle =
+                tower === selectedTower
+                    ? "#ffffff"
+                    : "#222";
+
+            ctx.lineWidth = 2;
+
+            ctx.strokeRect(
+                tower.x - 17,
+                tower.y - 17,
+                34,
+                34
+            );
+
+            // Torniase
+
+            ctx.save();
+
+            ctx.translate(
+                tower.x,
+                tower.y
+            );
+
+            let angle = 0;
+
+            const target =
+                getTargetForTower(
+                    tower
+                );
+
+            if (target) {
+
+                angle =
+                    Math.atan2(
+                        target.y -
+                            tower.y,
+                        target.x -
+                            tower.x
+                    );
+            }
+
+            ctx.rotate(
+                angle
+            );
+
+            ctx.fillStyle =
+                "#222";
+
+            ctx.fillRect(
+                0,
+                -5,
+                24,
+                10
+            );
+
+            ctx.restore();
+
+            // Keskiosa
+
+            ctx.fillStyle =
+                "#222";
 
             ctx.beginPath();
 
             ctx.arc(
                 tower.x,
                 tower.y,
-                27,
+                10,
                 0,
                 Math.PI * 2
             );
 
-            ctx.fillStyle =
-                "rgba(255,255,255,0.12)";
-
             ctx.fill();
 
-            ctx.strokeStyle =
+            // Level
+
+            ctx.fillStyle =
                 "#ffffff";
 
-            ctx.lineWidth = 2;
+            ctx.font =
+                "bold 11px Arial";
 
-            ctx.stroke();
-        }
+            ctx.textAlign =
+                "center";
 
-        // Torni
+            ctx.textBaseline =
+                "middle";
 
-        ctx.fillStyle =
-            type.color;
-
-        ctx.fillRect(
-            tower.x - 17,
-            tower.y - 17,
-            34,
-            34
-        );
-
-        ctx.strokeStyle =
-            tower === selectedTower
-                ? "#ffffff"
-                : "#222";
-
-        ctx.lineWidth = 2;
-
-        ctx.strokeRect(
-            tower.x - 17,
-            tower.y - 17,
-            34,
-            34
-        );
-
-        // Torniase
-
-        ctx.save();
-
-        ctx.translate(
-            tower.x,
-            tower.y
-        );
-
-        let angle = 0;
-
-        const target =
-            getTargetForTower(
-                tower
+            ctx.fillText(
+                tower.level,
+                tower.x,
+                tower.y
             );
 
-        if (target) {
+            ctx.textAlign =
+                "left";
 
-            angle =
-                Math.atan2(
-                    target.y - tower.y,
-                    target.x - tower.x
-                );
+            ctx.textBaseline =
+                "alphabetic";
         }
-
-        ctx.rotate(angle);
-
-        ctx.fillStyle =
-            "#222";
-
-        ctx.fillRect(
-            0,
-            -5,
-            24,
-            10
-        );
-
-        ctx.restore();
-
-        // Keskiosa
-
-        ctx.fillStyle =
-            "#222";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            tower.x,
-            tower.y,
-            10,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-
-        // Level
-
-        ctx.fillStyle =
-            "#ffffff";
-
-        ctx.font =
-            "bold 11px Arial";
-
-        ctx.textAlign =
-            "center";
-
-        ctx.textBaseline =
-            "middle";
-
-        ctx.fillText(
-            tower.level,
-            tower.x,
-            tower.y
-        );
-
-        ctx.textAlign =
-            "left";
-
-        ctx.textBaseline =
-            "alphabetic";
-    });
+    );
 }
 
 // ========================================
@@ -1944,12 +2067,18 @@ function getTargetForTower(tower) {
         tower.targeting ||
         "first";
 
+    // LAST:
+    // vähiten edennyt
+
     if (
         mode === "last"
     ) {
 
         return targets.reduce(
-            (best, enemy) =>
+            (
+                best,
+                enemy
+            ) =>
                 enemy.progress <
                 best.progress
                     ? enemy
@@ -1957,12 +2086,18 @@ function getTargetForTower(tower) {
         );
     }
 
+    // STRONGEST:
+    // eniten HP:tä
+
     if (
         mode === "strongest"
     ) {
 
         return targets.reduce(
-            (best, enemy) =>
+            (
+                best,
+                enemy
+            ) =>
                 enemy.health >
                 best.health
                     ? enemy
@@ -1970,10 +2105,14 @@ function getTargetForTower(tower) {
         );
     }
 
-    // First
+    // FIRST:
+    // pisimmälle edennyt
 
     return targets.reduce(
-        (best, enemy) =>
+        (
+            best,
+            enemy
+        ) =>
             enemy.progress >
             best.progress
                 ? enemy
@@ -1987,60 +2126,62 @@ function getTargetForTower(tower) {
 
 function updateTowers() {
 
-    towers.forEach(tower => {
+    towers.forEach(
+        tower => {
 
-        if (
-            tower.cooldown > 0
-        ) {
+            if (
+                tower.cooldown > 0
+            ) {
 
-            tower.cooldown--;
+                tower.cooldown--;
 
-            return;
+                return;
+            }
+
+            const type =
+                towerTypes[
+                    tower.type
+                ];
+
+            const target =
+                getTargetForTower(
+                    tower
+                );
+
+            if (!target) {
+                return;
+            }
+
+            bullets.push({
+
+                x:
+                    tower.x,
+
+                y:
+                    tower.y,
+
+                target,
+
+                speed:
+                    type.bulletSpeed,
+
+                damage:
+                    tower.damage,
+
+                splash:
+                    type.splash,
+
+                towerType:
+                    tower.type,
+
+                color:
+                    type.color
+            });
+
+            tower.cooldown =
+                type.cooldown;
         }
-
-        const type =
-            towerTypes[
-                tower.type
-            ];
-
-        const target =
-            getTargetForTower(
-                tower
-            );
-
-        if (!target) {
-            return;
-        }
-
-        bullets.push({
-
-            x:
-                tower.x,
-
-            y:
-                tower.y,
-
-            target,
-
-            speed:
-                type.bulletSpeed,
-
-            damage:
-                tower.damage,
-
-            splash:
-                type.splash,
-
-            towerType:
-                tower.type,
-
-            color:
-                type.color
-        });
-
-        tower.cooldown =
-            type.cooldown;
-    });
+    );
 }
 
 // ========================================
@@ -2050,7 +2191,8 @@ function updateTowers() {
 function updateBullets() {
 
     for (
-        let i = bullets.length - 1;
+        let i =
+            bullets.length - 1;
         i >= 0;
         i--
     ) {
@@ -2126,7 +2268,9 @@ function hitEnemy(bullet) {
         bullet.target;
 
     if (
-        !enemies.includes(target)
+        !enemies.includes(
+            target
+        )
     ) {
 
         return;
@@ -2141,43 +2285,47 @@ function hitEnemy(bullet) {
             : "hit"
     );
 
+    // Splash damage
+
     if (
         bullet.splash > 0
     ) {
 
-        enemies.forEach(enemy => {
+        enemies.forEach(
+            enemy => {
 
-            const dx =
-                enemy.x -
-                target.x;
+                const dx =
+                    enemy.x -
+                    target.x;
 
-            const dy =
-                enemy.y -
-                target.y;
+                const dy =
+                    enemy.y -
+                    target.y;
 
-            const distance =
-                Math.sqrt(
-                    dx * dx +
-                    dy * dy
-                );
+                const distance =
+                    Math.sqrt(
+                        dx * dx +
+                        dy * dy
+                    );
 
-            if (
-                distance <=
-                bullet.splash
-            ) {
+                if (
+                    distance <=
+                    bullet.splash
+                ) {
 
-                const damageMultiplier =
-                    enemy === target
-                        ? 1
-                        : 0.65;
+                    const damageMultiplier =
+                        enemy === target
+                            ? 1
+                            : 0.65;
 
-                damageEnemy(
-                    enemy,
-                    bullet.damage *
-                    damageMultiplier
-                );
+                    damageEnemy(
+                        enemy,
+                        bullet.damage *
+                            damageMultiplier
+                    );
+                }
             }
-        });
+        );
 
     } else {
 
@@ -2222,7 +2370,8 @@ function damageEnemy(
 function removeDeadEnemies() {
 
     for (
-        let i = enemies.length - 1;
+        let i =
+            enemies.length - 1;
         i >= 0;
         i--
     ) {
@@ -2282,39 +2431,41 @@ function removeDeadEnemies() {
 
 function drawBullets() {
 
-    bullets.forEach(bullet => {
+    bullets.forEach(
+        bullet => {
 
-        ctx.beginPath();
+            ctx.beginPath();
 
-        ctx.arc(
-            bullet.x,
-            bullet.y,
-            bullet.towerType ===
-                "cannon"
-                ? 7
-                : 5,
-            0,
-            Math.PI * 2
-        );
+            ctx.arc(
+                bullet.x,
+                bullet.y,
+                bullet.towerType ===
+                    "cannon"
+                    ? 7
+                    : 5,
+                0,
+                Math.PI * 2
+            );
 
-        ctx.fillStyle =
-            bullet.towerType ===
-                "cannon"
-                ? "#ff6600"
-                : bullet.towerType ===
-                    "rapid"
-                    ? "#7dff7d"
-                    : "#ffff00";
+            ctx.fillStyle =
+                bullet.towerType ===
+                    "cannon"
+                    ? "#ff6600"
+                    : bullet.towerType ===
+                        "rapid"
+                        ? "#7dff7d"
+                        : "#ffff00";
 
-        ctx.shadowBlur = 8;
+            ctx.shadowBlur = 8;
 
-        ctx.shadowColor =
-            bullet.color;
+            ctx.shadowColor =
+                bullet.color;
 
-        ctx.fill();
+            ctx.fill();
 
-        ctx.shadowBlur = 0;
-    });
+            ctx.shadowBlur = 0;
+        }
+    );
 }
 
 // ========================================
@@ -2328,7 +2479,9 @@ function createEffect(
 ) {
 
     let amount = 8;
+
     let color = "#ffffff";
+
     let maxSize = 25;
 
     if (
@@ -2336,7 +2489,9 @@ function createEffect(
     ) {
 
         amount = 18;
+
         color = "#ff8c00";
+
         maxSize = 55;
     }
 
@@ -2345,7 +2500,9 @@ function createEffect(
     ) {
 
         amount = 12;
+
         color = "#ff5555";
+
         maxSize = 30;
     }
 
@@ -2354,7 +2511,9 @@ function createEffect(
     ) {
 
         amount = 35;
+
         color = "#ffd166";
+
         maxSize = 90;
     }
 
@@ -2363,7 +2522,9 @@ function createEffect(
     ) {
 
         amount = 12;
+
         color = "#55efc4";
+
         maxSize = 35;
     }
 
@@ -2372,13 +2533,16 @@ function createEffect(
     ) {
 
         amount = 20;
+
         color = "#74b9ff";
+
         maxSize = 45;
     }
 
     effects.push({
 
         x,
+
         y,
 
         type,
@@ -2416,6 +2580,7 @@ function createEffect(
                     return {
 
                         x: 0,
+
                         y: 0,
 
                         vx:
@@ -2439,7 +2604,8 @@ function createEffect(
 function updateEffects() {
 
     for (
-        let i = effects.length - 1;
+        let i =
+            effects.length - 1;
         i >= 0;
         i--
     ) {
@@ -2501,7 +2667,10 @@ function drawEffects() {
 
                 const radius =
                     effect.maxSize *
-                    (1 - effect.life);
+                    (
+                        1 -
+                        effect.life
+                    );
 
                 ctx.beginPath();
 
@@ -2516,8 +2685,7 @@ function drawEffects() {
                 ctx.strokeStyle =
                     effect.color;
 
-                ctx.lineWidth =
-                    3;
+                ctx.lineWidth = 3;
 
                 ctx.stroke();
             }
@@ -2566,6 +2734,7 @@ function createFloatingText(
         text,
 
         x,
+
         y,
 
         color,
@@ -2686,21 +2855,25 @@ function updateUI() {
         );
 
     if (livesElement) {
+
         livesElement.textContent =
             lives;
     }
 
     if (moneyElement) {
+
         moneyElement.textContent =
             money;
     }
 
     if (waveElement) {
+
         waveElement.textContent =
             wave;
     }
 
     if (scoreElement) {
+
         scoreElement.textContent =
             score;
     }
